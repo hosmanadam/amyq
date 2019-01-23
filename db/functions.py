@@ -63,3 +63,13 @@ def get_question_id_for_answer_id(connection, cursor, answer_id):
     cursor.execute(queries.read_question_id_for_answer_id, params={'id': answer_id})
     question_id = cursor.fetchall()[0]['question_id']
     return question_id
+
+
+@connection_handler(dictionary=True)
+def delete_question(connection, cursor, question_id):
+    cursor.execute(queries.delete_question, params={'id': question_id})
+
+
+@connection_handler(dictionary=True)
+def delete_answer(connection, cursor, answer_id):
+    cursor.execute(queries.delete_answer, params={'id': answer_id})

@@ -21,8 +21,8 @@ CREATE TABLE answers (
 
 CREATE TABLE comments (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    question_id INT NOT NULL,
-    answer_id INT NOT NULL,
+    question_id INT,
+    answer_id INT,
     body VARCHAR(1000),
     time_submitted DATETIME NOT NULL DEFAULT NOW()
 );
@@ -41,20 +41,20 @@ CREATE TABLE tags_to_questions (
 
 
 ALTER TABLE answers
-ADD FOREIGN KEY (question_id) REFERENCES questions(id);
+ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
 
 
 ALTER TABLE comments
-ADD FOREIGN KEY (question_id) REFERENCES questions(id);
+ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
 
 
 ALTER TABLE comments
-ADD FOREIGN KEY (answer_id) REFERENCES answers(id);
+ADD FOREIGN KEY (answer_id) REFERENCES answers(id) ON DELETE CASCADE;
 
 
 ALTER TABLE tags_to_questions
-ADD FOREIGN KEY (question_id) REFERENCES questions(id);
+ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
 
 
 ALTER TABLE tags_to_questions
-ADD FOREIGN KEY (tag_id) REFERENCES tags(id)
+ADD FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE

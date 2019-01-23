@@ -49,6 +49,19 @@ def submit_question():
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/question/<int:question_id>/delete')
+def delete_question(question_id):
+    dbfunc.delete_question(question_id)
+    return redirect(f'/questions')
+
+
+@app.route('/answer/<int:answer_id>/delete')
+def delete_answer(answer_id):
+    question_id = dbfunc.get_question_id_for_answer_id(answer_id)
+    dbfunc.delete_answer(answer_id)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/submit-answer/<int:question_id>', methods=['POST'])
 def submit_answer(question_id):
     dbfunc.add_answer(request.form, question_id)

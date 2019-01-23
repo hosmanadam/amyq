@@ -2,7 +2,8 @@ INSERT INTO questions
     (id, view_count, vote_count, title, body, image_url, time_submitted)
 VALUES
     (1, 3, 3, 'Whats the meaning of life?', 'Ive wondered about this since I was a kid, please let me know ASAP', NULL, '2011-10-09 12:11:11'),
-    (2, 4, 4, 'Why is the sky blue?', 'I wont be able to sleep until you answer, please help!!!', NULL, '2012-10-09 13:11:11');
+    (2, 4, 4, 'Why is the sky blue?', 'I wont be able to sleep until you answer, please help!!!', NULL, '2012-10-09 13:11:11'),
+    (3, 2, 4, 'How is she so cute???', 'Seriously!!!!!!', 'https://www.petmd.com/sites/default/files/petmd-kitten-development.jpg', '2013-10-09 13:11:11');
 
 
 INSERT INTO answers

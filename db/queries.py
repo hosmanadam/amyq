@@ -51,3 +51,13 @@ update_answer_vote_count = """
     SET vote_count = vote_count + %(value)s
     WHERE id = %(id)s
 """
+
+delete_question = """
+    DELETE FROM questions
+    WHERE id = %(id)s
+"""
+
+delete_answer = """
+    DELETE FROM answers
+    WHERE id = %(id)s
+"""
