@@ -29,6 +29,19 @@ def add_question():
     return render_template('add-question.html', questions=questions)
 
 
+@app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
+def vote_on_question(question_id, direction):
+    dbfunc.update_question_vote_count(direction=direction, id_=question_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<int:answer_id>/vote-<direction>', methods=['POST'])
+def vote_on_answer(answer_id, direction):
+    dbfunc.update_answer_vote_count(direction=direction, id_=answer_id)
+    question_id = dbfunc.get_question_id_for_answer_id(answer_id)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/submit-question', methods=['POST'])
 def submit_question():
     dbfunc.add_question(request.form)
@@ -36,7 +49,13 @@ def submit_question():
     return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<question_id>')
+@app.route('/submit-answer/<int:question_id>', methods=['POST'])
+def submit_answer(question_id):
+    dbfunc.add_answer(request.form, question_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/question/<int:question_id>')
 def question(question_id):
     question = dbfunc.get_question(question_id)
     answers = dbfunc.get_answers(question_id)

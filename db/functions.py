@@ -32,8 +32,34 @@ def add_question(connection, cursor, form):
 
 
 @connection_handler(dictionary=True)
+def add_answer(connection, cursor, form, question_id):
+    body = form['body']
+    image_url = form['image_url'] or None
+    cursor.execute(queries.add_answer, params={'question_id': question_id, 'body': body, 'image_url': image_url})
+
+
+@connection_handler(dictionary=True)
 def get_latest_content_match_id(connection, cursor, form):
     title = form['title']
     cursor.execute(queries.read_latest_content_match_id, params={'title': title})
     question_id = cursor.fetchall()[0]['id']
+    return question_id
+
+
+@connection_handler(dictionary=True)
+def update_question_vote_count(connection, cursor, direction, id_):
+    value = 1 if direction == 'up' else -1
+    cursor.execute(queries.update_question_vote_count, params={'value': value, 'id': id_})
+
+
+@connection_handler(dictionary=True)
+def update_answer_vote_count(connection, cursor, direction, id_):
+    value = 1 if direction == 'up' else -1
+    cursor.execute(queries.update_answer_vote_count, params={'value': value, 'id': id_})
+
+
+@connection_handler(dictionary=True)
+def get_question_id_for_answer_id(connection, cursor, answer_id):
+    cursor.execute(queries.read_question_id_for_answer_id, params={'id': answer_id})
+    question_id = cursor.fetchall()[0]['question_id']
     return question_id

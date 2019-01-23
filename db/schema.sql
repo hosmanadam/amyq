@@ -13,7 +13,7 @@ CREATE TABLE answers (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     question_id INT NOT NULL,
     vote_count INT NOT NULL DEFAULT 0,
-    body VARCHAR(1000),
+    body VARCHAR(1000) NOT NULL,
     image_url VARCHAR(100),
     time_submitted DATETIME NOT NULL DEFAULT NOW()
 );

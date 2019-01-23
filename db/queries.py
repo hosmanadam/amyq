@@ -21,9 +21,33 @@ add_question = """
         (%(title)s, %(body)s, %(image_url)s)
 """
 
+add_answer = """
+    INSERT INTO answers
+        (question_id, body, image_url)
+    VALUES
+        (%(question_id)s, %(body)s, %(image_url)s)
+"""
+
 read_latest_content_match_id = """
     SELECT id FROM questions
     WHERE title = %(title)s
     ORDER BY time_submitted DESC
     LIMIT 1
+"""
+
+read_question_id_for_answer_id = """
+    SELECT question_id FROM answers
+    WHERE id = %(id)s
+"""
+
+update_question_vote_count = """
+    UPDATE questions
+    SET vote_count = vote_count + %(value)s
+    WHERE id = %(id)s
+"""
+
+update_answer_vote_count = """
+    UPDATE answers
+    SET vote_count = vote_count + %(value)s
+    WHERE id = %(id)s
 """

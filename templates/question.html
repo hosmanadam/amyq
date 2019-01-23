@@ -4,6 +4,13 @@
 <h2>{{ question['title'] }}</h2>
 <small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
 
+<form action="/question/{{ question['id'] }}/vote-up" method="POST">
+    <input type="submit" value="Vote up" />
+</form>
+
+<form action="/question/{{ question['id'] }}/vote-down" method="POST">
+    <input type="submit" value="Vote down" />
+</form>
 
 {% if question['body'] %}
     <p>{{ question['body'] }}</p>
@@ -19,13 +26,40 @@
     <h3>Answers:</h3>
 
     {% for answer in answers %}
-    <p>{{ answer['body'] }}</p>
-    <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small>
+        <p>{{ answer['body'] }}</p>
+        <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small><br>
+        {% if answer['image_url'] %}
+            <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
+        {% endif %}
+
+        <form action="/answer/{{ answer['id'] }}/vote-up" method="POST">
+            <input type="submit" value="Vote up" />
+        </form>
+
+        <form action="/answer/{{ answer['id'] }}/vote-down" method="POST">
+            <input type="submit" value="Vote down" />
+        </form>
+
     {% endfor %}
+
+    <h3>Add your answer:</h3>
 
 {% else %}
 
-    Be the first to answer this question!
+    <h3>Be the first to answer this question:</h3>
 
 {% endif %}
+
+    <form action="/submit-answer/{{ question['id'] }}" method="post">
+
+        <label for="details">Details:</label><br>
+        <textarea id="details" name="body" minlength="10" required></textarea><br>
+
+        <label for="image">Image URL:</label><br>
+        <input id="image" type="text" name="image_url" min placeholder="e.g. http://www.images.com/cutekitten.jpg"><br>
+
+        <input type="submit">
+
+    </form>
+
 {% endblock %}
