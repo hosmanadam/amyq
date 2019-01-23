@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Views</th>
+        <th>Votes</th>
+        <th>Submitted</th>
+    </tr>
+{% for question in questions %}
+    <tr>
+        <td><a href="question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+        <td>{{ question['view_count'] }}</td>
+        <td>{{ question['vote_count'] }}</td>
+        <td>{{ question['time_submitted'] }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

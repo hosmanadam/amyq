@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<h2>Add your question here:</h2>
+<form action="submit-question" method="post">
+
+    <label for="summary">Summary:</label><br>
+    <input id="summary" type="text" name="title" placeholder="e.g. &quot;What's the meaning of life?&quot;" required><br>
+
+    <label for="details">Details:</label><br>
+    <textarea id="details" name="body"></textarea><br>
+
+    <label for="image">Image URL:</label><br>
+    <input id="image" type="text" name="image_url" placeholder="e.g. http://www.images.com/cutekitten.jpg"><br>
+
+    <input type="submit">
+
+</form>
+
+{% endblock %}

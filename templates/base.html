@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ title }}</title>
+        <style>
+            h1 {color: darkblue}
+        </style>
+    </head>
+    <body>
+        <header>
+        </header>
+        <main>
+        <h4><a href="/">Home</a></h4>
+        <h2><a href="/add-question">Ask a new question</a></h2>
+        {% block body %}{% endblock %}
+        </main>
+        <footer>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<h2>{{ question['title'] }}</h2>
+<small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
+
+
+{% if question['body'] %}
+    <p>{{ question['body'] }}</p>
+{% endif %}
+
+
+{% if question['image_url'] %}
+    <img src="{{ question['image_url'] }}" alt="Illustration"><br>
+{% endif %}
+
+
+{% if answers %}
+    <h3>Answers:</h3>
+
+    {% for answer in answers %}
+    <p>{{ answer['body'] }}</p>
+    <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small>
+    {% endfor %}
+
+{% else %}
+
+    Be the first to answer this question!
+
+{% endif %}
+{% endblock %}
