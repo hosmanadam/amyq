@@ -18,10 +18,15 @@ def index():
     return redirect('/questions')
 
 
-@app.route('/questions')
+@app.route('/questions', methods=['GET', 'POST'])
 def questions():
-    questions = dbfunc.get_questions()
-    return render_template('questions.html', questions=questions)
+    if request.method == 'POST' and request.form['ordering']:
+        order_by, order_direction = request.form['ordering'].split('-')
+        questions = dbfunc.get_questions(order_by=order_by, order_direction=order_direction)
+        return render_template('questions.html', questions=questions, ordering=request.form['ordering'])
+    else:
+        questions = dbfunc.get_questions()
+        return render_template('questions.html', questions=questions, ordering='time_submitted-DESC')
 
 
 @app.route('/add-question')

@@ -1,6 +1,5 @@
 read_questions = """
     SELECT * FROM questions
-    ORDER BY time_submitted DESC
 """
 
 read_question = """

@@ -3,10 +3,15 @@ from db import queries
 
 
 @connection_handler(dictionary=True)
-def get_questions(connection, cursor):
-    cursor.execute(queries.read_questions)
+def get_questions(connection, cursor, order_by='time_submitted', order_direction='DESC'):
+    cursor.execute(queries.read_questions, params={'order_by': order_by, 'order_direction': order_direction})
     questions = cursor.fetchall()
-    return questions
+    questions_ordered = sorted(
+        questions,
+        key=lambda x: x[order_by],
+        reverse=(True if order_direction == 'DESC' else False)
+    )
+    return questions_ordered
 
 
 @connection_handler(dictionary=True)
