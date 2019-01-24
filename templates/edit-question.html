@@ -1,0 +1,24 @@
+<!--
+Copy-paste child of add-question.html
+Except: title, pre-filled fields
+-->
+{% extends 'base.html' %}
+{% block body %}
+
+<h2>Edit your question here:</h2>
+<form action="/question/{{ question['id'] }}/submit-edited-question" method="post">
+
+    <label for="summary">Summary:</label><br>
+    <input id="summary" type="text" name="title" placeholder="e.g. &quot;What's the meaning of life?&quot;" value="{{ question['title'] }}" required><br>
+
+    <label for="details">Details:</label><br>
+    <textarea id="details" name="body">{{ question['body'] or '' }}</textarea><br>
+
+    <label for="image">Image URL:</label><br>
+    <input id="image" type="text" name="image_url" placeholder="e.g. http://www.images.com/cutekitten.jpg" value="{{ question['image_url'] or '' }}" ><br>
+
+    <input type="submit">
+
+</form>
+
+{% endblock %}

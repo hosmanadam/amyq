@@ -20,6 +20,12 @@ add_question = """
         (%(title)s, %(body)s, %(image_url)s)
 """
 
+update_question = """
+    UPDATE questions
+    SET title=%(title)s, body=%(body)s, image_url=%(image_url)s
+    WHERE id=%(id)s
+"""
+
 add_answer = """
     INSERT INTO answers
         (question_id, body, image_url)

@@ -34,6 +34,18 @@ def add_question():
     return render_template('add-question.html', questions=questions)
 
 
+@app.route('/question/<int:question_id>/edit')
+def edit_question(question_id):
+    question = dbfunc.get_question(question_id)
+    return render_template('edit-question.html', question=question)
+
+
+@app.route('/question/<int:question_id>/submit-edited-question', methods=['POST'])
+def submit_edited_question(question_id):
+    dbfunc.update_question(request.form, question_id)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
 def vote_on_question(question_id, direction):
     dbfunc.update_question_vote_count(direction=direction, id_=question_id)
