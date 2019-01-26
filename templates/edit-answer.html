@@ -1,0 +1,22 @@
+<!--
+Copy-paste child of edit-question.html
+Except: title, summary field
+-->
+{% extends 'base.html' %}
+{% block title %}Edit answer #{{ answer['id'] }}{% endblock %}
+{% block body %}
+
+<h2>Edit answer #{{ answer['id'] }} here:</h2>
+<form action="/answer/{{ answer['id'] }}/submit-edited-answer" method="post">
+
+    <label for="details">Details:</label><br>
+    <textarea id="details" name="body">{{ answer['body'] }}</textarea><br>
+
+    <label for="image">Image URL:</label><br>
+    <input id="image" type="text" name="image_url" placeholder="e.g. http://www.images.com/cutekitten.jpg" value="{{ answer['image_url'] or '' }}" ><br>
+
+    <input type="submit">
+
+</form>
+
+{% endblock %}

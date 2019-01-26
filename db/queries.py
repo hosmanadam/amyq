@@ -31,6 +31,12 @@ update_question = """
     WHERE id=%(id)s
 """
 
+update_answer = """
+    UPDATE answers
+    SET body=%(body)s, image_url=%(image_url)s
+    WHERE id=%(id)s
+"""
+
 add_answer = """
     INSERT INTO answers
         (question_id, body, image_url)

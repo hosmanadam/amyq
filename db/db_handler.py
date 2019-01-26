@@ -59,6 +59,13 @@ def update_question(connection, cursor, form, question_id):
 
 
 @connection_handler(dictionary=True)
+def update_answer(connection, cursor, form, answer_id):
+    body = form['body'] or None
+    image_url = form['image_url'] or None
+    cursor.execute(queries.update_answer, params={'body': body, 'image_url': image_url, 'id': answer_id})
+
+
+@connection_handler(dictionary=True)
 def add_answer(connection, cursor, form, question_id):
     body = form['body']
     image_url = form['image_url'] or None

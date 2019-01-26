@@ -40,6 +40,12 @@ def edit_question(question_id):
     return render_template('edit-question.html', question=question)
 
 
+@app.route('/answer/<int:answer_id>/edit')
+def edit_answer(answer_id):
+    answer = db_handler.get_answer(answer_id)
+    return render_template('edit-answer.html', answer=answer)
+
+
 @app.route('/question/<int:question_id>/add-comment')
 def add_question_comment(question_id):
     question = db_handler.get_question(question_id)
@@ -68,6 +74,13 @@ def submit_answer_comment(answer_id):
 @app.route('/question/<int:question_id>/submit-edited-question', methods=['POST'])
 def submit_edited_question(question_id):
     db_handler.update_question(request.form, question_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/answer/<int:answer_id>/submit-edited-answer', methods=['POST'])
+def submit_edited_answer(answer_id):
+    db_handler.update_answer(request.form, answer_id)
+    question_id = db_handler.get_question_id_for_answer_id(answer_id)
     return redirect(f'/question/{question_id}')
 
 
