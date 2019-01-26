@@ -17,7 +17,7 @@ VALUES
 INSERT INTO comments
     (id, question_id, answer_id, body, time_submitted)
 VALUES
-    (1, 1, 1, 'please dont be so rude', '2010-10-10 11:11:11');
+    (1, NULL, 1, 'please dont be so rude', '2010-10-10 11:11:11');
 
 
 INSERT INTO tags

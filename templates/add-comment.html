@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if question %}
+        Edit question {{ question['id'] }}
+    {% elif answer %}
+        Edit answer {{ answer['id'] }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+{% if question %}
+
+    <h2>{{ question['title'] }}</h2>
+
+    {% if question['body'] %}
+        <p>{{ question['body'] }}</p>
+    {% endif %}
+
+    {% if question['image_url'] %}
+        <img src="{{ question['image_url'] }}" alt="Illustration"><br>
+    {% endif %}
+
+    <small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
+
+{% elif answer %}
+
+    <p>{{ answer['body'] }}</p>
+    <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small><br>
+    {% if answer['image_url'] %}
+        <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
+    {% endif %}
+
+{% endif %}
+
+<hr>
+
+{% if question %}
+    <form action="/question/{{ question['id'] }}/submit-comment" method="post">
+{% elif answer %}
+    <form action="/answer/{{ answer['id'] }}/submit-comment" method="post">
+{% endif %}
+        <label for="body">Add your comment:</label><br>
+        <textarea id="body" name="body"></textarea><br>
+
+        <input type="submit">
+    </form>
+
+
+{% endblock %}

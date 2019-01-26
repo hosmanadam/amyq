@@ -7,6 +7,11 @@ read_question = """
     WHERE id = %(id)s
 """
 
+read_answer = """
+    SELECT * FROM answers
+    WHERE id = %(id)s
+"""
+
 read_answers = """
     SELECT * FROM answers
     WHERE question_id = %(id)s
@@ -65,4 +70,30 @@ delete_question = """
 delete_answer = """
     DELETE FROM answers
     WHERE id = %(id)s
+"""
+
+add_question_comment = """
+    INSERT INTO comments
+        (question_id, body)
+    VALUES
+        (%(question_id)s, %(body)s)
+"""
+
+add_answer_comment = """
+    INSERT INTO comments
+        (answer_id, body)
+    VALUES
+        (%(answer_id)s, %(body)s)
+"""
+
+read_comments_for_question = """
+    SELECT * FROM comments
+    WHERE question_id = %(question_id)s
+    ORDER BY time_submitted
+"""
+
+read_comments_for_answer = """
+    SELECT * FROM comments
+    WHERE answer_id = %(answer_id)s
+    ORDER BY time_submitted
 """

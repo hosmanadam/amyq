@@ -18,6 +18,9 @@ def get_questions(connection, cursor, order_by='time_submitted', order_direction
 def get_question(connection, cursor, question_id):
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
+    cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
+    comments = cursor.fetchall()
+    question.update({'comments': comments})
     return question
 
 
@@ -25,7 +28,18 @@ def get_question(connection, cursor, question_id):
 def get_answers(connection, cursor, question_id):
     cursor.execute(queries.read_answers, params={'id': question_id})
     answers = cursor.fetchall()
+    for answer in answers:
+        cursor.execute(queries.read_comments_for_answer, params={'answer_id': answer['id']})
+        comments = cursor.fetchall()
+        answer.update({'comments': comments})
     return answers
+
+
+@connection_handler(dictionary=True)
+def get_answer(connection, cursor, answer_id):
+    cursor.execute(queries.read_answer, params={'id': answer_id})
+    answer = cursor.fetchall()[0]
+    return answer
 
 
 @connection_handler(dictionary=True)
@@ -86,3 +100,15 @@ def delete_question(connection, cursor, question_id):
 @connection_handler(dictionary=True)
 def delete_answer(connection, cursor, answer_id):
     cursor.execute(queries.delete_answer, params={'id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def add_question_comment(connection, cursor, form, question_id):
+    body = form['body']
+    cursor.execute(queries.add_question_comment, params={'question_id': question_id, 'body': body})
+
+
+@connection_handler(dictionary=True)
+def add_answer_comment(connection, cursor, form, answer_id):
+    body = form['body']
+    cursor.execute(queries.add_answer_comment, params={'answer_id': answer_id, 'body': body})
