@@ -1,5 +1,6 @@
-from cnx import connection_handler
+from db.cnx import connection_handler
 from util import break_up_query
+import os
 
 
 @connection_handler()
@@ -38,3 +39,12 @@ def reset_database():
     rebuild_tables()
     populate_tables()
     print("\nReset finished!")
+
+
+def main():
+    os.chdir('..')
+    reset_database()
+
+
+if __name__ == '__main__':
+    main()

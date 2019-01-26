@@ -1,4 +1,4 @@
-from cnx import connection_handler
+from db.cnx import connection_handler
 from db import queries
 
 
