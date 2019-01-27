@@ -24,23 +24,22 @@ def get_questions(connection, cursor, order_by, order_direction, search):
 def get_question(connection, cursor, question_id, increment_view_count=False):
     if increment_view_count:
         cursor.execute(queries.increment_question_view_count, params={'id': question_id})
+    # Get question
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
+    # Get its comments
     cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
-    comments = cursor.fetchall()
-    question.update({'comments': comments})
-    return question
-
-
-@connection_handler(dictionary=True)
-def get_answers(connection, cursor, question_id):
+    question_comments = cursor.fetchall()
+    # Get its answers with their comments
     cursor.execute(queries.read_answers, params={'id': question_id})
     answers = cursor.fetchall()
     for answer in answers:
         cursor.execute(queries.read_comments_for_answer, params={'answer_id': answer['id']})
-        comments = cursor.fetchall()
-        answer.update({'comments': comments})
-    return answers
+        answer_comments = cursor.fetchall()
+        answer.update({'comments': answer_comments})
+    # Merge all into question
+    question.update({'comments': question_comments, 'answers': answers})
+    return question
 
 
 @connection_handler(dictionary=True)

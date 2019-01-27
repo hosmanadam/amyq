@@ -52,10 +52,10 @@
 
 <small><a href="/question/{{ question['id'] }}/add-comment">Add comment</a></small>
 
-{% if answers %}
+{% if question.get('answers') %}
     <h3>Answers:</h3>
 
-    {% for answer in answers %}
+    {% for answer in question.get('answers') %}
         <p>{{ answer['body'] }}</p>
         <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small><br>
         {% if answer['image_url'] %}
