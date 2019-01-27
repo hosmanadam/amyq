@@ -50,7 +50,7 @@ def questions(page_number):
 
 @app.route('/question/<int:question_id>')
 def question(question_id):
-    question = db_handler.get_question(question_id)
+    question = db_handler.get_question(question_id, increment_view_count=True)
     answers = db_handler.get_answers(question_id)
     return render_template('question.html', question=question, answers=answers)
 

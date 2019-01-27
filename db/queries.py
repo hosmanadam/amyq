@@ -117,6 +117,12 @@ update_answer_vote_count = """
     WHERE id = %(id)s
 """
 
+increment_question_view_count = """
+    UPDATE questions
+    SET view_count = view_count + 1
+    WHERE id = %(id)s
+"""
+
 delete_question = """
     DELETE FROM questions
     WHERE id = %(id)s

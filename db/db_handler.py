@@ -21,7 +21,9 @@ def get_questions(connection, cursor, order_by, order_direction, search):
 
 
 @connection_handler(dictionary=True)
-def get_question(connection, cursor, question_id):
+def get_question(connection, cursor, question_id, increment_view_count=False):
+    if increment_view_count:
+        cursor.execute(queries.increment_question_view_count, params={'id': question_id})
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
     cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
