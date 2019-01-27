@@ -23,28 +23,29 @@ def index():
     return redirect('/questions/1')
 
 
-@app.route('/questions/<page_number>', methods=['GET', 'POST'])
+@app.route('/questions/<page_number>')
 def questions(page_number):
-    if request.form.get('ordering'):
-        order_by, order_direction = request.form.get('ordering').split('-')
+    if request.args.get('ordering'):
+        order_by, order_direction = request.args.get('ordering').split('-')
     else:
         order_by, order_direction = 'time_submitted', 'DESC'
-    search = request.form.get('search')
-    if request.form.get('questions_per_page'):
-        questions_per_page = int(request.form.get('questions_per_page'))
+    search = request.args.get('search')
+    if request.args.get('questions_per_page'):
+        questions_per_page = int(request.args.get('questions_per_page'))
     else:
         questions_per_page = 5
     questions = db_handler.get_questions(order_by=order_by, order_direction=order_direction, search=search)
     page_numbers = range(1, math.ceil(len(questions)/questions_per_page) + 1)
-    questions = paginate(questions, page_number, questions_per_page) or abort(404)
+    questions = paginate(questions, page_number, questions_per_page)
     return render_template(
         'questions.html',
         questions=questions,
-        ordering=request.form.get('ordering'),
+        ordering=request.args.get('ordering') or 'time_submitted-DESC',
         search=search,
         page_number=int(page_number),
         page_numbers=page_numbers,
         questions_per_page=questions_per_page,
+        query_string=request.query_string.decode("utf-8"),
     )
 
 

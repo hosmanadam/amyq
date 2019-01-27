@@ -5,7 +5,7 @@ Home
 
 {% block body %}
 
-<form id="filters" action="/questions/1" method="POST">
+<form id="filters" action="/questions/1">
     <label for="search">Search: </label>
     <input type="text" id="search" name="search" placeholder="e.g. &quot;kittens&quot;"{{ ' value=' + search if search else '' }}><br>
     <label for="ordering">Order by: </label>
@@ -27,7 +27,7 @@ Home
         <option value="50"{{ ' selected' if questions_per_page == 50 else '' }}>50</option>
         <option value="100"{{ ' selected' if questions_per_page == 100 else '' }}>100</option>
     </select><br>
-    <button name="name" value="value" type="submit">Do it</button>
+    <button type="submit">Do it</button>
 </form>
 
 <table>
@@ -46,25 +46,26 @@ Home
     </tr>
 {% endfor %}
 </table>
-<span id="page-numbers">
-    {% if page_number > page_numbers[0] %}
-        <a href="/questions/{{ page_numbers[0] }}">&lt;&lt;</a>
-        <a href="/questions/{{ page_number - 1 }}">&lt;</a>
-    {% else %}
-        &lt;&lt; &lt;
-    {% endif %}
+{% if page_numbers %}
+    <span id="page-numbers">
+        {% if page_number > page_numbers[0] %}
+            <a href="/questions/{{ page_numbers[0] }}?{{ query_string }}">&lt;&lt;</a>
+            <a href="/questions/{{ page_number - 1 }}?{{ query_string }}">&lt;</a>
+        {% else %}
+            &lt;&lt; &lt;
+        {% endif %}
 
-    {% for num in page_numbers %}
-        <a href="/questions/{{ num }}">{{ num if num != page_number else '<strong>'|safe + num|string + '</strong>'|safe }}</a>
-    {% endfor %}
+        {% for num in page_numbers %}
+            <a href="/questions/{{ num }}?{{ query_string }}">{{ num if num != page_number else '<strong>'|safe + num|string + '</strong>'|safe }}</a>
+        {% endfor %}
 
-    {% if page_number < page_numbers[-1] %}
-        <a href="/questions/{{ page_number + 1 }}">&gt;</a>
-        <a href="/questions/{{ page_numbers[-1] }}">&gt;&gt;</a>
-    {% else %}
-        &gt; &gt;&gt;
-    {% endif %}
+        {% if page_number < page_numbers[-1] %}
+            <a href="/questions/{{ page_number + 1 }}?{{ query_string }}">&gt;</a>
+            <a href="/questions/{{ page_numbers[-1] }}?{{ query_string }}">&gt;&gt;</a>
+        {% else %}
+            &gt; &gt;&gt;
+        {% endif %}
 
-</span>
-
+    </span>
+{% endif %}
 {% endblock %}
