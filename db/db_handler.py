@@ -56,59 +56,11 @@ def get_comment(connection, cursor, comment_id):
 
 
 @connection_handler(dictionary=True)
-def add_question(connection, cursor, form):
-    title = form['title']
-    body = form['body'] or None
-    image_url = form['image_url'] or None
-    cursor.execute(queries.add_question, params={'title': title, 'body': body, 'image_url': image_url})
-
-
-@connection_handler(dictionary=True)
-def update_question(connection, cursor, form, question_id):
-    title = form['title']
-    body = form['body'] or None
-    image_url = form['image_url'] or None
-    cursor.execute(queries.update_question, params={'title': title, 'body': body, 'image_url': image_url, 'id': question_id})
-
-
-@connection_handler(dictionary=True)
-def update_answer(connection, cursor, form, answer_id):
-    body = form['body'] or None
-    image_url = form['image_url'] or None
-    cursor.execute(queries.update_answer, params={'body': body, 'image_url': image_url, 'id': answer_id})
-
-
-@connection_handler(dictionary=True)
-def update_comment(connection, cursor, form, comment_id):
-    body = form['body']
-    cursor.execute(queries.update_comment, params={'body': body, 'id': comment_id})
-
-
-@connection_handler(dictionary=True)
-def add_answer(connection, cursor, form, question_id):
-    body = form['body']
-    image_url = form['image_url'] or None
-    cursor.execute(queries.add_answer, params={'question_id': question_id, 'body': body, 'image_url': image_url})
-
-
-@connection_handler(dictionary=True)
 def get_latest_content_match_id(connection, cursor, form):
     title = form['title']
     cursor.execute(queries.read_latest_content_match_id, params={'title': title})
     question_id = cursor.fetchall()[0]['id']
     return question_id
-
-
-@connection_handler(dictionary=True)
-def update_question_vote_count(connection, cursor, direction, id_):
-    value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_question_vote_count, params={'value': value, 'id': id_})
-
-
-@connection_handler(dictionary=True)
-def update_answer_vote_count(connection, cursor, direction, id_):
-    value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_answer_vote_count, params={'value': value, 'id': id_})
 
 
 @connection_handler(dictionary=True)
@@ -130,18 +82,18 @@ def get_question_id_for_comment_id(connection, cursor, comment_id):
 
 
 @connection_handler(dictionary=True)
-def delete_question(connection, cursor, question_id):
-    cursor.execute(queries.delete_question, params={'id': question_id})
+def add_question(connection, cursor, form):
+    title = form['title']
+    body = form['body'] or None
+    image_url = form['image_url'] or None
+    cursor.execute(queries.add_question, params={'title': title, 'body': body, 'image_url': image_url})
 
 
 @connection_handler(dictionary=True)
-def delete_answer(connection, cursor, answer_id):
-    cursor.execute(queries.delete_answer, params={'id': answer_id})
-
-
-@connection_handler(dictionary=True)
-def delete_comment(connection, cursor, comment_id):
-    cursor.execute(queries.delete_comment, params={'id': comment_id})
+def add_answer(connection, cursor, form, question_id):
+    body = form['body']
+    image_url = form['image_url'] or None
+    cursor.execute(queries.add_answer, params={'question_id': question_id, 'body': body, 'image_url': image_url})
 
 
 @connection_handler(dictionary=True)
@@ -154,3 +106,51 @@ def add_question_comment(connection, cursor, form, question_id):
 def add_answer_comment(connection, cursor, form, answer_id):
     body = form['body']
     cursor.execute(queries.add_answer_comment, params={'answer_id': answer_id, 'body': body})
+
+
+@connection_handler(dictionary=True)
+def update_question(connection, cursor, form, question_id):
+    title = form['title']
+    body = form['body'] or None
+    image_url = form['image_url'] or None
+    cursor.execute(queries.update_question, params={'title': title, 'body': body, 'image_url': image_url, 'id': question_id})
+
+
+@connection_handler(dictionary=True)
+def update_answer(connection, cursor, form, answer_id):
+    body = form['body']
+    image_url = form['image_url'] or None
+    cursor.execute(queries.update_answer, params={'body': body, 'image_url': image_url, 'id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def update_comment(connection, cursor, form, comment_id):
+    body = form['body']
+    cursor.execute(queries.update_comment, params={'body': body, 'id': comment_id})
+
+
+@connection_handler(dictionary=True)
+def update_question_vote_count(connection, cursor, direction, id_):
+    value = 1 if direction == 'up' else -1
+    cursor.execute(queries.update_question_vote_count, params={'value': value, 'id': id_})
+
+
+@connection_handler(dictionary=True)
+def update_answer_vote_count(connection, cursor, direction, id_):
+    value = 1 if direction == 'up' else -1
+    cursor.execute(queries.update_answer_vote_count, params={'value': value, 'id': id_})
+
+
+@connection_handler(dictionary=True)
+def delete_question(connection, cursor, question_id):
+    cursor.execute(queries.delete_question, params={'id': question_id})
+
+
+@connection_handler(dictionary=True)
+def delete_answer(connection, cursor, answer_id):
+    cursor.execute(queries.delete_answer, params={'id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def delete_comment(connection, cursor, comment_id):
+    cursor.execute(queries.delete_comment, params={'id': comment_id})
