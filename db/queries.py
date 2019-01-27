@@ -38,13 +38,13 @@ read_comment = """
 read_comments_for_question = """
     SELECT * FROM comments
     WHERE question_id = %(question_id)s
-    ORDER BY time_submitted
+    ORDER BY time_submitted DESC
 """
 
 read_comments_for_answer = """
     SELECT * FROM comments
     WHERE answer_id = %(answer_id)s
-    ORDER BY time_submitted
+    ORDER BY time_submitted DESC
 """
 
 read_latest_content_match_id = """
