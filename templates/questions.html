@@ -39,7 +39,13 @@ Home
     </tr>
 {% for question in questions %}
     <tr>
-        <td><a href="/question/{{ question['id'] }}">{{ question['title'] }}</a></td>
+        <td><a href="/question/{{ question['id'] }}">
+            {% if search %}
+                {{ question['title']|replace(search, '<span class="highlight">'|safe + search + '</span>'|safe) }}
+            {% else %}
+                {{ question['title'] }}
+            {% endif %}
+        </a></td>
         <td>{{ question['view_count'] }}</td>
         <td>{{ question['vote_count'] }}</td>
         <td>{{ question['time_submitted'] }}</td>
