@@ -2,17 +2,20 @@
 {% block title %}Home{% endblock %}
 {% block body %}
 
-<form id="ordering" action="questions" method="POST">
-    <select name="ordering" >
-        <option value="title-DESC"{{ ' selected' if ordering=='title-DESC' else '' }}>Order by: title, descending</option>
-        <option value="title-ASC"{{ ' selected' if ordering=='title-ASC' else '' }}>Order by: title, ascending</option>
-        <option value="view_count-DESC"{{ ' selected' if ordering=='view_count-DESC' else '' }}>Order by: views, descending</option>
-        <option value="view_count-ASC"{{ ' selected' if ordering=='view_count-ASC' else '' }}>Order by: views, ascending</option>
-        <option value="vote_count-DESC"{{ ' selected' if ordering=='vote_count-DESC' else '' }}>Order by: votes, descending</option>
-        <option value="vote_count-ASC"{{ ' selected' if ordering=='vote_count-ASC' else '' }}>Order by: votes, ascending</option>
-        <option value="time_submitted-DESC"{{ ' selected' if ordering=='time_submitted-DESC' else '' }}>Order by: time submitted, descending</option>
-        <option value="time_submitted-ASC"{{ ' selected' if ordering=='time_submitted-ASC' else '' }}>Order by: time submitted, ascending</option>
-    </select>
+<form id="filters" action="questions" method="POST">
+    <label for="search">Search: </label>
+    <input type="text" id="search" name="search" placeholder="e.g. &quot;kittens&quot;"{{ ' value=' + search if search else '' }}><br>
+    <label for="ordering">Order by: </label>
+    <select id="ordering" name="ordering" >
+        <option value="title-DESC"{{ ' selected' if ordering=='title-DESC' else '' }}>Title, descending</option>
+        <option value="title-ASC"{{ ' selected' if ordering=='title-ASC' else '' }}>Title, ascending</option>
+        <option value="view_count-DESC"{{ ' selected' if ordering=='view_count-DESC' else '' }}>Views, descending</option>
+        <option value="view_count-ASC"{{ ' selected' if ordering=='view_count-ASC' else '' }}>Views, ascending</option>
+        <option value="vote_count-DESC"{{ ' selected' if ordering=='vote_count-DESC' else '' }}>Votes, descending</option>
+        <option value="vote_count-ASC"{{ ' selected' if ordering=='vote_count-ASC' else '' }}>Votes, ascending</option>
+        <option value="time_submitted-DESC"{{ ' selected' if ordering=='time_submitted-DESC' else '' }}>Time submitted, descending</option>
+        <option value="time_submitted-ASC"{{ ' selected' if ordering=='time_submitted-ASC' else '' }}>Time submitted, ascending</option>
+    </select><br>
     <button name="name" value="value" type="submit">Do it</button>
 </form>
 

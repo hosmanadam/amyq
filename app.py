@@ -20,13 +20,13 @@ def index():
 
 @app.route('/questions', methods=['GET', 'POST'])
 def questions():
-    if request.method == 'POST' and request.form['ordering']:
-        order_by, order_direction = request.form['ordering'].split('-')
-        questions = db_handler.get_questions(order_by=order_by, order_direction=order_direction)
-        return render_template('questions.html', questions=questions, ordering=request.form['ordering'])
+    if request.form.get('ordering'):
+        order_by, order_direction = request.form.get('ordering').split('-')
     else:
-        questions = db_handler.get_questions()
-        return render_template('questions.html', questions=questions, ordering='time_submitted-DESC')
+        order_by, order_direction = 'time_submitted', 'DESC'
+    search = request.form.get('search')
+    questions = db_handler.get_questions(order_by=order_by, order_direction=order_direction, search=search)
+    return render_template('questions.html', questions=questions, ordering=request.form.get('ordering'), search=search)
 
 
 @app.route('/add-question')

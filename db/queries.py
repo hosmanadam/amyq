@@ -103,3 +103,15 @@ read_comments_for_answer = """
     WHERE answer_id = %(answer_id)s
     ORDER BY time_submitted
 """
+
+read_questions_for_search = """
+    SELECT
+        questions.id, questions.title, questions.view_count, questions.vote_count, questions.time_submitted
+    FROM
+        questions LEFT JOIN answers ON questions.id = answers.question_id
+    WHERE
+        questions.title LIKE CONCAT('%', %(search)s, '%') OR
+        questions.body LIKE CONCAT('%', %(search)s, '%') OR
+        answers.body LIKE CONCAT('%', %(search)s, '%')
+    GROUP BY questions.id
+"""
