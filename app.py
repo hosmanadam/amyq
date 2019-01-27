@@ -46,6 +46,12 @@ def edit_answer(answer_id):
     return render_template('edit-answer.html', answer=answer)
 
 
+@app.route('/comment/<int:comment_id>/edit')
+def edit_comment(comment_id):
+    comment = db_handler.get_comment(comment_id)
+    return render_template('edit-comment.html', comment=comment)
+
+
 @app.route('/question/<int:question_id>/add-comment')
 def add_question_comment(question_id):
     question = db_handler.get_question(question_id)
@@ -84,6 +90,13 @@ def submit_edited_answer(answer_id):
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/comment/<int:comment_id>/submit-edited-comment', methods=['POST'])
+def submit_edited_comment(comment_id):
+    db_handler.update_comment(request.form, comment_id)
+    question_id = db_handler.get_question_id_for_comment_id(comment_id)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
 def vote_on_question(question_id, direction):
     db_handler.update_question_vote_count(direction=direction, id_=question_id)
@@ -114,6 +127,13 @@ def delete_question(question_id):
 def delete_answer(answer_id):
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
     db_handler.delete_answer(answer_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/comment/<int:comment_id>/delete')
+def delete_comment(comment_id):
+    question_id = db_handler.get_question_id_for_comment_id(comment_id)
+    db_handler.delete_comment(comment_id)
     return redirect(f'/question/{question_id}')
 
 

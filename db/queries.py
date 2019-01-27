@@ -18,6 +18,11 @@ read_answers = """
     ORDER BY time_submitted DESC
 """
 
+read_comment = """
+    SELECT * FROM comments
+    WHERE id = %(id)s
+"""
+
 add_question = """
     INSERT INTO questions
         (title, body, image_url)
@@ -34,6 +39,12 @@ update_question = """
 update_answer = """
     UPDATE answers
     SET body=%(body)s, image_url=%(image_url)s
+    WHERE id=%(id)s
+"""
+
+update_comment = """
+    UPDATE comments
+    SET body=%(body)s
     WHERE id=%(id)s
 """
 
@@ -75,6 +86,11 @@ delete_question = """
 
 delete_answer = """
     DELETE FROM answers
+    WHERE id = %(id)s
+"""
+
+delete_comment = """
+    DELETE FROM comments
     WHERE id = %(id)s
 """
 

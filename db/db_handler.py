@@ -49,6 +49,13 @@ def get_answer(connection, cursor, answer_id):
 
 
 @connection_handler(dictionary=True)
+def get_comment(connection, cursor, comment_id):
+    cursor.execute(queries.read_comment, params={'id': comment_id})
+    comment = cursor.fetchall()[0]
+    return comment
+
+
+@connection_handler(dictionary=True)
 def add_question(connection, cursor, form):
     title = form['title']
     body = form['body'] or None
@@ -69,6 +76,12 @@ def update_answer(connection, cursor, form, answer_id):
     body = form['body'] or None
     image_url = form['image_url'] or None
     cursor.execute(queries.update_answer, params={'body': body, 'image_url': image_url, 'id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def update_comment(connection, cursor, form, comment_id):
+    body = form['body']
+    cursor.execute(queries.update_comment, params={'body': body, 'id': comment_id})
 
 
 @connection_handler(dictionary=True)
@@ -106,6 +119,17 @@ def get_question_id_for_answer_id(connection, cursor, answer_id):
 
 
 @connection_handler(dictionary=True)
+def get_question_id_for_comment_id(connection, cursor, comment_id):
+    cursor.execute(queries.read_comment, params={'id': comment_id})
+    comment = cursor.fetchall()[0]
+    question_id, answer_id = comment.get('question_id'), comment.get('answer_id')
+    if question_id:
+        return question_id
+    else:
+        return get_question_id_for_answer_id(answer_id)
+
+
+@connection_handler(dictionary=True)
 def delete_question(connection, cursor, question_id):
     cursor.execute(queries.delete_question, params={'id': question_id})
 
@@ -113,6 +137,11 @@ def delete_question(connection, cursor, question_id):
 @connection_handler(dictionary=True)
 def delete_answer(connection, cursor, answer_id):
     cursor.execute(queries.delete_answer, params={'id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def delete_comment(connection, cursor, comment_id):
+    cursor.execute(queries.delete_comment, params={'id': comment_id})
 
 
 @connection_handler(dictionary=True)

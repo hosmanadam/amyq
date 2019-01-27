@@ -36,6 +36,14 @@
         <p>{{ comment['body'] }}<br>
             <small>Submitted: {{ comment['time_submitted'] }}</small>
         </p>
+
+        <form action="/comment/{{ comment['id'] }}/edit">
+            <input type="submit" value="Edit" />
+        </form>
+
+        <form action="/comment/{{ comment['id'] }}/delete">
+            <input type="submit" value="Delete" />
+        </form>
     {% endfor %}
 {% endif %}
 
@@ -73,6 +81,14 @@
                 <p>{{ comment['body'] }}<br>
                     <small>Submitted: {{ comment['time_submitted'] }}</small>
                 </p>
+
+                <form action="/comment/{{ comment['id'] }}/edit">
+                    <input type="submit" value="Edit" />
+                </form>
+
+                <form action="/comment/{{ comment['id'] }}/delete">
+                    <input type="submit" value="Delete" />
+                </form>
             {% endfor %}
 
         {% endif %}
