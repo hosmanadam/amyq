@@ -3,7 +3,10 @@ Copy-paste child of add-question.html
 Except: title, pre-filled fields
 -->
 {% extends 'base.html' %}
-{% block title %}Edit question #{{ question['id'] }}{% endblock %}
+{% block title %}{{ super() }}
+Edit question #{{ question['id'] }}
+{% endblock %}
+
 {% block body %}
 
 <h2>Edit question #{{ question['id'] }} here:</h2>

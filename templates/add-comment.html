@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}
+{% block title %}{{ super() }}
     {% if question %}
-        Edit question {{ question['id'] }}
+        Comment on question #{{ question['id'] }}
     {% elif answer %}
-        Edit answer {{ answer['id'] }}
+        Comment on answer #{{ answer['id'] }}
     {% endif %}
 {% endblock %}
 

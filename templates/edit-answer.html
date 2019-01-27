@@ -3,7 +3,10 @@ Copy-paste child of edit-question.html
 Except: title, summary field
 -->
 {% extends 'base.html' %}
-{% block title %}Edit answer #{{ answer['id'] }}{% endblock %}
+{% block title %}{{ super() }}
+Edit answer #{{ answer['id'] }}
+{% endblock %}
+
 {% block body %}
 
 <h2>Edit answer #{{ answer['id'] }} here:</h2>

@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Question #{{ question['id'] }}{% endblock %}
+{% block title %}{{ super() }}
+{{ question['title'][:50] + ('...' if question['title']|length > 50 else '') }}
+{% endblock %}
+
 {% block body %}
 
 <h2>{{ question['title'] }}</h2>
