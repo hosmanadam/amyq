@@ -60,6 +60,14 @@ def add_question():
     return render_template('add-question.html', questions=questions)
 
 
+@app.route('/question/<int:question_id>/add-tag')
+def add_tag_to_question(question_id):
+    question = db_handler.get_question(question_id)
+    existing_tags = db_handler.get_existing_tags()
+    other_tags = [tag for tag in existing_tags if tag not in question.get('tags')]
+    return render_template('add-tag.html', question=question, other_tags=other_tags)
+
+
 @app.route('/question/<int:question_id>/add-comment')
 def add_question_comment(question_id):
     question = db_handler.get_question(question_id)
@@ -110,6 +118,20 @@ def submit_question():
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/question/<int:question_id>/submit-existing-tag', methods=['POST'])
+def submit_existing_tag(question_id):
+    tag_id = int(request.form.get('tag_choice_id'))
+    db_handler.add_existing_tag_to_question(question_id, tag_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/question/<int:question_id>/submit-new-tag', methods=['POST'])
+def submit_new_tag(question_id):
+    tag_name = request.form.get('new_tag_name')
+    db_handler.add_new_tag_to_question(question_id, tag_name)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/submit-answer/<int:question_id>', methods=['POST'])
 def submit_answer(question_id):
     db_handler.add_answer(request.form, question_id)
@@ -153,6 +175,12 @@ def submit_edited_comment(comment_id):
 def delete_question(question_id):
     db_handler.delete_question(question_id)
     return redirect(f'/questions')
+
+
+@app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
+def delete_tag_from_question(question_id, tag_id):
+    db_handler.delete_tag_from_question(question_id, tag_id)
+    return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/delete')

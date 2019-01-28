@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ super() }}
+Tag question #{{ question['id'] }}
+{% endblock %}
+
+{% block body %}
+
+<h2>Tag question #{{ question['id'] }} here:</h2>
+
+<form action="/question/{{ question['id'] }}/submit-existing-tag" method="POST">
+    <label for="chosen_tag">Choose one of the existing tags:</label><br>
+    <select id="chosen_tag" name="tag_choice_id">
+        <option value="" selected disabled></option>
+        {% for tag in other_tags %}
+            <option value="{{ tag['id'] }}">#{{ tag['name'] }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit">
+</form>
+
+<form action="/question/{{ question['id'] }}/submit-new-tag" method="POST">
+    <label for="new_tag">Or define a new one:</label><br>
+    #<input type="text" id="new_tag" name="new_tag_name">
+    <input type="submit">
+</form>
+
+{% endblock %}

@@ -12,7 +12,6 @@ Edit comment #{{ comment['id'] }}
 <h2>Edit comment #{{ comment['id'] }} here:</h2>
 <form action="/comment/{{ comment['id'] }}/submit-edited-comment" method="post">
 
-    <!--<label for="details">Details:</label><br>-->
     <textarea id="details" name="body">{{ comment['body'] }}</textarea><br>
 
     <input type="submit">

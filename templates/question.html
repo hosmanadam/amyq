@@ -15,7 +15,18 @@
     <img src="{{ question['image_url'] }}" alt="Illustration"><br>
 {% endif %}
 
+{% for tag in question.get('tags') %}
+
+    #{{ tag['name'] }}
+    <a href="/question/{{ question['id'] }}/tag/{{ tag['id'] }}/delete">❌</a>
+
+{% endfor %}<br>
+
 <small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
+
+<form action="/question/{{ question['id'] }}/add-tag">
+    <input type="submit" value="Add tag" />
+</form>
 
 <form action="/question/{{ question['id'] }}/vote-up" method="POST">
     <input type="submit" value="Vote up" />

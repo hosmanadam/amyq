@@ -27,6 +27,9 @@ def get_question(connection, cursor, question_id, increment_view_count=False):
     # Get question
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
+    # Get its tags
+    cursor.execute(queries.read_tags_for_question, params={'question_id': question_id})
+    tags = cursor.fetchall()
     # Get its comments
     cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
     question_comments = cursor.fetchall()
@@ -38,7 +41,7 @@ def get_question(connection, cursor, question_id, increment_view_count=False):
         answer_comments = cursor.fetchall()
         answer.update({'comments': answer_comments})
     # Merge all into question
-    question.update({'comments': question_comments, 'answers': answers})
+    question.update({'tags': tags, 'comments': question_comments, 'answers': answers})
     return question
 
 
@@ -54,6 +57,13 @@ def get_comment(connection, cursor, comment_id):
     cursor.execute(queries.read_comment, params={'id': comment_id})
     comment = cursor.fetchall()[0]
     return comment
+
+
+@connection_handler(dictionary=True)
+def get_existing_tags(connection, cursor):
+    cursor.execute(queries.read_existing_tags)
+    existing_tags = cursor.fetchall()
+    return existing_tags
 
 
 @connection_handler(dictionary=True)
@@ -88,6 +98,19 @@ def add_question(connection, cursor, form):
     body = form['body'] or None
     image_url = form['image_url'] or None
     cursor.execute(queries.add_question, params={'title': title, 'body': body, 'image_url': image_url})
+
+
+@connection_handler(dictionary=True)
+def add_existing_tag_to_question(connection, cursor, question_id, tag_id):
+    cursor.execute(queries.add_existing_tag_to_question, params={'question_id': question_id, 'tag_id': tag_id})
+
+
+@connection_handler(dictionary=True)
+def add_new_tag_to_question(connection, cursor, question_id, tag_name):
+    cursor.execute(queries.add_new_tag, params={'name': tag_name})
+    cursor.execute(queries.read_tag_id_for_tag_name, params={'name': tag_name})
+    tag_id = cursor.fetchall()[0]['id']
+    add_existing_tag_to_question(connection, cursor, question_id, tag_id)
 
 
 @connection_handler(dictionary=True)
@@ -145,6 +168,11 @@ def update_answer_vote_count(connection, cursor, direction, id_):
 @connection_handler(dictionary=True)
 def delete_question(connection, cursor, question_id):
     cursor.execute(queries.delete_question, params={'id': question_id})
+
+
+@connection_handler(dictionary=True)
+def delete_tag_from_question(connection, cursor, question_id, tag_id):
+    cursor.execute(queries.delete_tag_from_question, params={'question_id': question_id, 'tag_id': tag_id})
 
 
 @connection_handler(dictionary=True)

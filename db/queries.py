@@ -35,6 +35,22 @@ read_comment = """
     WHERE id = %(id)s
 """
 
+read_existing_tags = """
+    SELECT * FROM tags
+"""
+
+read_tags_for_question = """
+    SELECT tags.name, tags.id
+    FROM tags JOIN tags_to_questions ON tags.id = tags_to_questions.tag_id
+    WHERE question_id = %(question_id)s
+    ORDER BY tags.name
+"""
+
+read_tag_id_for_tag_name = """
+    SELECT id FROM tags
+    WHERE name=%(name)s
+"""
+
 read_comments_for_question = """
     SELECT * FROM comments
     WHERE question_id = %(question_id)s
@@ -64,6 +80,20 @@ add_question = """
         (title, body, image_url)
     VALUES
         (%(title)s, %(body)s, %(image_url)s)
+"""
+
+add_new_tag = """
+    INSERT INTO tags
+        (name)
+    VALUES
+        (%(name)s)
+"""
+
+add_existing_tag_to_question = """
+    INSERT INTO tags_to_questions
+        (question_id, tag_id)
+    VALUES
+        (%(question_id)s, %(tag_id)s)
 """
 
 add_answer = """
@@ -126,6 +156,11 @@ increment_question_view_count = """
 delete_question = """
     DELETE FROM questions
     WHERE id = %(id)s
+"""
+
+delete_tag_from_question = """
+    DELETE FROM tags_to_questions
+    WHERE question_id = %(question_id)s AND tag_id = %(tag_id)s
 """
 
 delete_answer = """
