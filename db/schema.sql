@@ -21,7 +21,8 @@ CREATE TABLE questions (
     title VARCHAR(100) NOT NULL,
     body VARCHAR(1000),
     image_url VARCHAR(1000),
-    time_submitted DATETIME NOT NULL DEFAULT NOW()
+    created DATETIME NOT NULL DEFAULT NOW(),
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
 
 
@@ -32,7 +33,8 @@ CREATE TABLE answers (
     vote_count INT NOT NULL DEFAULT 0,
     body VARCHAR(1000) NOT NULL,
     image_url VARCHAR(100),
-    time_submitted DATETIME NOT NULL DEFAULT NOW()
+    created DATETIME NOT NULL DEFAULT NOW(),
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
 
 
@@ -42,21 +44,24 @@ CREATE TABLE comments (
     question_id INT,
     answer_id INT,
     body VARCHAR(1000),
-    time_submitted DATETIME NOT NULL DEFAULT NOW()
+    created DATETIME NOT NULL DEFAULT NOW(),
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
 
 
 CREATE TABLE tags (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
-    user_id INT NOT NULL
+    user_id INT NOT NULL,
+    created DATETIME NOT NULL DEFAULT NOW()
 );
 
 
 CREATE TABLE tags_to_questions (
     question_id INT NOT NULL,
     tag_id INT NOT NULL,
-    user_id INT NOT NULL
+    user_id INT NOT NULL,
+    created DATETIME NOT NULL DEFAULT NOW()
 );
 
 
