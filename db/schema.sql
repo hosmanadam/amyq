@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE user (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL UNIQUE,
     first_name VARCHAR(100) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE users (
 );
 
 
-CREATE TABLE questions (
+CREATE TABLE question (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     view_count INT NOT NULL DEFAULT 0,
@@ -26,7 +26,7 @@ CREATE TABLE questions (
 );
 
 
-CREATE TABLE answers (
+CREATE TABLE answer (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_id INT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE answers (
 );
 
 
-CREATE TABLE comments (
+CREATE TABLE comment (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_id INT,
@@ -49,7 +49,7 @@ CREATE TABLE comments (
 );
 
 
-CREATE TABLE tags (
+CREATE TABLE tag (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL UNIQUE,
     user_id INT NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE tags (
 );
 
 
-CREATE TABLE tags_to_questions (
+CREATE TABLE tag_to_question (
     question_id INT NOT NULL,
     tag_id INT NOT NULL,
     user_id INT NOT NULL,
@@ -66,37 +66,37 @@ CREATE TABLE tags_to_questions (
 
 
 
-ALTER TABLE questions
-ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE question
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
 
-ALTER TABLE answers
-ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE answer
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
-ALTER TABLE answers
-ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
-
-
-ALTER TABLE comments
-ADD FOREIGN KEY (user_id) REFERENCES users(id);
-
-ALTER TABLE comments
-ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
-
-ALTER TABLE comments
-ADD FOREIGN KEY (answer_id) REFERENCES answers(id) ON DELETE CASCADE;
+ALTER TABLE answer
+ADD FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE;
 
 
-ALTER TABLE tags
-ADD FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE comment
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
+
+ALTER TABLE comment
+ADD FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE;
+
+ALTER TABLE comment
+ADD FOREIGN KEY (answer_id) REFERENCES answer(id) ON DELETE CASCADE;
 
 
-ALTER TABLE tags_to_questions
-ADD FOREIGN KEY (user_id) REFERENCES users(id);
-
-ALTER TABLE tags_to_questions
-ADD FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE;
+ALTER TABLE tag
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
 
-ALTER TABLE tags_to_questions
-ADD FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+ALTER TABLE tag_to_question
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
+
+ALTER TABLE tag_to_question
+ADD FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE;
+
+
+ALTER TABLE tag_to_question
+ADD FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
