@@ -34,7 +34,8 @@ CREATE TABLE answer (
     body VARCHAR(1000) NOT NULL,
     image_url VARCHAR(100),
     created DATETIME NOT NULL DEFAULT NOW(),
-    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
+    accepted DATETIME DEFAULT NULL
 );
 
 
@@ -96,7 +97,6 @@ ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
 ALTER TABLE tag_to_question
 ADD FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE;
-
 
 ALTER TABLE tag_to_question
 ADD FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
