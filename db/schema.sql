@@ -17,7 +17,6 @@ CREATE TABLE question (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     view_count INT NOT NULL DEFAULT 0,
-    vote_count INT NOT NULL DEFAULT 0,
     title VARCHAR(100) NOT NULL,
     body VARCHAR(1000),
     image_url VARCHAR(1000),
@@ -30,7 +29,6 @@ CREATE TABLE answer (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_id INT NOT NULL,
-    vote_count INT NOT NULL DEFAULT 0,
     body VARCHAR(1000) NOT NULL,
     image_url VARCHAR(100),
     created DATETIME NOT NULL DEFAULT NOW(),
@@ -42,8 +40,8 @@ CREATE TABLE answer (
 CREATE TABLE comment (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    question_id INT,
-    answer_id INT,
+    question_id INT DEFAULT NULL,
+    answer_id INT DEFAULT NULL,
     body VARCHAR(1000),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
@@ -63,6 +61,17 @@ CREATE TABLE tag_to_question (
     tag_id INT NOT NULL,
     user_id INT NOT NULL,
     created DATETIME NOT NULL DEFAULT NOW()
+);
+
+
+CREATE TABLE vote (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    value INT NOT NULL,                                    -- 1=up, -1=down
+    question_id INT DEFAULT NULL,
+    answer_id INT DEFAULT NULL,
+    created DATETIME NOT NULL DEFAULT NOW(),
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
 
 
@@ -100,3 +109,13 @@ ADD FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE;
 
 ALTER TABLE tag_to_question
 ADD FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+
+
+ALTER TABLE vote
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
+
+ALTER TABLE vote
+ADD FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE;
+
+ALTER TABLE vote
+ADD FOREIGN KEY (answer_id) REFERENCES answer(id) ON DELETE CASCADE;
