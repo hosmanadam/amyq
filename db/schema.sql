@@ -1,6 +1,9 @@
 CREATE TABLE user (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
+    admin_rights INT NOT NULL DEFAULT 0,
+    password_hash CHAR(60) BINARY NOT NULL,
+    email VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     locality VARCHAR(100),
@@ -9,11 +12,8 @@ CREATE TABLE user (
     github_username VARCHAR(39),
     twitter_username VARCHAR(15),
     linkedin_profile_url VARCHAR(100),
-    password_hash CHAR(60) BINARY NOT NULL,
-    email VARCHAR(255) NOT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
-    admin_rights INT NOT NULL DEFAULT 0,
     UNIQUE KEY (username),
     UNIQUE KEY (email)
 );
