@@ -17,9 +17,9 @@ CREATE TABLE user (
 CREATE TABLE question (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    title VARCHAR(100) NOT NULL,
-    body VARCHAR(1000),
-    image_url VARCHAR(1000),
+    title VARCHAR(150) NOT NULL,
+    body VARCHAR(30000),
+    image_url VARCHAR(2083),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
@@ -29,8 +29,8 @@ CREATE TABLE answer (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_id INT NOT NULL,
-    body VARCHAR(1000) NOT NULL,
-    image_url VARCHAR(100),
+    body VARCHAR(30000) NOT NULL,
+    image_url VARCHAR(2083),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
     accepted DATETIME DEFAULT NULL
@@ -42,7 +42,7 @@ CREATE TABLE comment (
     user_id INT NOT NULL,
     question_id INT DEFAULT NULL,
     answer_id INT DEFAULT NULL,
-    body VARCHAR(1000),
+    body VARCHAR(30000),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
