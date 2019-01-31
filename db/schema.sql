@@ -1,6 +1,6 @@
 CREATE TABLE user (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(100) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     locality VARCHAR(100),
@@ -9,7 +9,8 @@ CREATE TABLE user (
     email VARCHAR(255) NOT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
-    admin_rights INT NOT NULL DEFAULT 0
+    admin_rights INT NOT NULL DEFAULT 0,
+    UNIQUE KEY (username)
 );
 
 
@@ -49,17 +50,20 @@ CREATE TABLE comment (
 
 CREATE TABLE tag (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(50) NOT NULL,
     user_id INT NOT NULL,
-    created DATETIME NOT NULL DEFAULT NOW()
+    created DATETIME NOT NULL DEFAULT NOW(),
+    UNIQUE KEY (name)
 );
 
 
 CREATE TABLE tag_to_question (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     question_id INT NOT NULL,
     tag_id INT NOT NULL,
     user_id INT NOT NULL,
-    created DATETIME NOT NULL DEFAULT NOW()
+    created DATETIME NOT NULL DEFAULT NOW(),
+    UNIQUE KEY (user_id, question_id)
 );
 
 
@@ -69,7 +73,8 @@ CREATE TABLE view (                                        -- One entry per user
     question_id INT DEFAULT NULL,
     count INT NOT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
-    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
+    UNIQUE KEY (user_id, question_id)
 );
 
 
@@ -80,7 +85,8 @@ CREATE TABLE vote (
     question_id INT DEFAULT NULL,
     answer_id INT DEFAULT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
-    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
+    UNIQUE KEY (user_id, question_id, answer_id)
 );
 
 
