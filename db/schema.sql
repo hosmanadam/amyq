@@ -16,7 +16,6 @@ CREATE TABLE user (
 CREATE TABLE question (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    view_count INT NOT NULL DEFAULT 0,
     title VARCHAR(100) NOT NULL,
     body VARCHAR(1000),
     image_url VARCHAR(1000),
@@ -64,6 +63,16 @@ CREATE TABLE tag_to_question (
 );
 
 
+CREATE TABLE view (                                        -- One entry per user per question
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    question_id INT DEFAULT NULL,
+    count INT NOT NULL,
+    created DATETIME NOT NULL DEFAULT NOW(),
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
+);
+
+
 CREATE TABLE vote (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -108,7 +117,14 @@ ALTER TABLE tag_to_question
 ADD FOREIGN KEY (question_id) REFERENCES question (id) ON DELETE CASCADE;
 
 ALTER TABLE tag_to_question
-ADD FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+ADD FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE;
+
+
+ALTER TABLE view
+ADD FOREIGN KEY (user_id) REFERENCES user(id);
+
+ALTER TABLE view
+ADD FOREIGN KEY (question_id) REFERENCES question(id) ON DELETE CASCADE;
 
 
 ALTER TABLE vote
