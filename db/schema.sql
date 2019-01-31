@@ -14,7 +14,8 @@ CREATE TABLE user (
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
     admin_rights INT NOT NULL DEFAULT 0,
-    UNIQUE KEY (username)
+    UNIQUE KEY (username),
+    UNIQUE KEY (email)
 );
 
 
