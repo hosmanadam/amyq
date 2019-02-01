@@ -29,7 +29,7 @@ def questions(page_number):
         order_by, order_direction = request.args.get('ordering').split('-')
     else:
         order_by, order_direction = 'created', 'DESC'
-    search = request.args.get('search')
+    search = request.args.get('search') or ''
     if request.args.get('questions_per_page'):
         questions_per_page = int(request.args.get('questions_per_page'))
     else:

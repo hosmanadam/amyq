@@ -3,14 +3,11 @@ from db import queries
 
 
 @connection_handler(dictionary=True)
-def get_questions(connection, cursor, order_by, order_direction, search):
-    if search:
-        cursor.execute(
-            queries.read_questions_for_search,
-            params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
-        )
-    else:
-        cursor.execute(queries.read_questions, params={'order_by': order_by, 'order_direction': order_direction})
+def get_questions(connection, cursor, order_by, order_direction, search=''):
+    cursor.execute(
+        queries.read_questions_for_search,
+        params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
+    )
     questions = cursor.fetchall()
     questions_ordered = sorted(
         questions,

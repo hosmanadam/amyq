@@ -1,22 +1,85 @@
-read_questions = """
-    SELECT * FROM question
-"""
-
 read_questions_for_search = """
     SELECT
-        question.id, question.title, question.view_count, question.vote_count, question.created
+        question.id,
+        question.title,
+        question.created,
+        question.last_updated,
+        question.body,
+        user.username,
+        ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
+        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
+
     FROM
-        question LEFT JOIN answer ON question.id = answer.question_id
+        question
+
+        JOIN user ON question.user_id = user.id
+
+        LEFT JOIN answer ON question.id = answer.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(count) AS count
+            FROM view
+            GROUP BY question_id
+        ) AS views ON question.id = views.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(value) AS count
+            FROM vote
+            GROUP BY question_id
+        ) AS votes ON question.id = votes.question_id
+
     WHERE
         question.title LIKE CONCAT('%', %(search)s, '%') OR
         question.body LIKE CONCAT('%', %(search)s, '%') OR
         answer.body LIKE CONCAT('%', %(search)s, '%')
-    GROUP BY question.id
+
+    GROUP BY
+        question.id
 """
 
 read_question = """
-    SELECT * FROM question
-    WHERE id = %(id)s
+    SELECT
+        question.id,
+        question.title,
+        question.body,
+        question.created,
+        question.last_updated,
+        user.username,
+        ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
+        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
+
+    FROM
+        question
+
+        JOIN user ON question.user_id = user.id
+
+        LEFT JOIN answer ON question.id = answer.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(count) AS count
+            FROM view
+            GROUP BY question_id
+        ) AS views ON question.id = views.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(value) AS count
+            FROM vote
+            GROUP BY question_id
+        ) AS votes ON question.id = votes.question_id
+
+    WHERE
+        question.id = %(id)s
+
+    GROUP BY
+        question.id
 """
 
 read_answers = """
