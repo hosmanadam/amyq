@@ -28,7 +28,7 @@ def questions(page_number):
     if request.args.get('ordering'):
         order_by, order_direction = request.args.get('ordering').split('-')
     else:
-        order_by, order_direction = 'time_submitted', 'DESC'
+        order_by, order_direction = 'created', 'DESC'
     search = request.args.get('search')
     if request.args.get('questions_per_page'):
         questions_per_page = int(request.args.get('questions_per_page'))
@@ -40,7 +40,7 @@ def questions(page_number):
     return render_template(
         'questions.html',
         questions=questions,
-        ordering=request.args.get('ordering') or 'time_submitted-DESC',
+        ordering=request.args.get('ordering') or 'created-DESC',
         search=search,
         page_number=int(page_number),
         page_numbers=page_numbers,

@@ -22,12 +22,12 @@
         <img src="{{ question['image_url'] }}" alt="Illustration"><br>
     {% endif %}
 
-    <small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
+    <small>Submitted: {{ question['created'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
 
 {% elif answer %}
 
     <p>{{ answer['body'] }}</p>
-    <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small><br>
+    <small>Submitted: {{ answer['created'] }} Votes: {{ answer['vote_count'] }}</small><br>
     {% if answer['image_url'] %}
         <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
     {% endif %}

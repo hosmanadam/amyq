@@ -16,8 +16,8 @@ Home
         <option value="view_count-ASC"{{ ' selected' if ordering=='view_count-ASC' else '' }}>Views, ascending</option>
         <option value="vote_count-DESC"{{ ' selected' if ordering=='vote_count-DESC' else '' }}>Votes, descending</option>
         <option value="vote_count-ASC"{{ ' selected' if ordering=='vote_count-ASC' else '' }}>Votes, ascending</option>
-        <option value="time_submitted-DESC"{{ ' selected' if ordering=='time_submitted-DESC' else '' }}>Time submitted, descending</option>
-        <option value="time_submitted-ASC"{{ ' selected' if ordering=='time_submitted-ASC' else '' }}>Time submitted, ascending</option>
+        <option value="created-DESC"{{ ' selected' if ordering=='created-DESC' else '' }}>Time submitted, descending</option>
+        <option value="created-ASC"{{ ' selected' if ordering=='created-ASC' else '' }}>Time submitted, ascending</option>
     </select><br>
     <label for="questions_per_page">Questions per page: </label>
     <select id="questions_per_page" name="questions_per_page">
@@ -48,7 +48,7 @@ Home
         </a></td>
         <td>{{ question['view_count'] }}</td>
         <td>{{ question['vote_count'] }}</td>
-        <td>{{ question['time_submitted'] }}</td>
+        <td>{{ question['created'] }}</td>
     </tr>
 {% endfor %}
 </table>

@@ -22,7 +22,7 @@
 
 {% endfor %}<br>
 
-<small>Submitted: {{ question['time_submitted'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
+<small>Submitted: {{ question['created'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
 
 <form action="/question/{{ question['id'] }}/add-tag">
     <input type="submit" value="Add tag" />
@@ -48,7 +48,7 @@
     <h4>Comments:</h4>
     {% for comment in question['comments'] %}
         <p>{{ comment['body'] }}<br>
-            <small>Submitted: {{ comment['time_submitted'] }}</small>
+            <small>Submitted: {{ comment['created'] }}</small>
         </p>
 
         <form action="/comment/{{ comment['id'] }}/edit">
@@ -68,7 +68,7 @@
 
     {% for answer in question.get('answers') %}
         <p>{{ answer['body'] }}</p>
-        <small>Submitted: {{ answer['time_submitted'] }} Votes: {{ answer['vote_count'] }}</small><br>
+        <small>Submitted: {{ answer['created'] }} Votes: {{ answer['vote_count'] }}</small><br>
         {% if answer['image_url'] %}
             <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
         {% endif %}
@@ -93,7 +93,7 @@
             <h4>Comments:</h4>
             {% for comment in answer['comments'] %}
                 <p>{{ comment['body'] }}<br>
-                    <small>Submitted: {{ comment['time_submitted'] }}</small>
+                    <small>Submitted: {{ comment['created'] }}</small>
                 </p>
 
                 <form action="/comment/{{ comment['id'] }}/edit">

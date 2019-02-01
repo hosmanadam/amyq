@@ -1,174 +1,174 @@
 read_questions = """
-    SELECT * FROM questions
+    SELECT * FROM question
 """
 
 read_questions_for_search = """
     SELECT
-        questions.id, questions.title, questions.view_count, questions.vote_count, questions.time_submitted
+        question.id, question.title, question.view_count, question.vote_count, question.created
     FROM
-        questions LEFT JOIN answers ON questions.id = answers.question_id
+        question LEFT JOIN answer ON question.id = answer.question_id
     WHERE
-        questions.title LIKE CONCAT('%', %(search)s, '%') OR
-        questions.body LIKE CONCAT('%', %(search)s, '%') OR
-        answers.body LIKE CONCAT('%', %(search)s, '%')
-    GROUP BY questions.id
+        question.title LIKE CONCAT('%', %(search)s, '%') OR
+        question.body LIKE CONCAT('%', %(search)s, '%') OR
+        answer.body LIKE CONCAT('%', %(search)s, '%')
+    GROUP BY question.id
 """
 
 read_question = """
-    SELECT * FROM questions
+    SELECT * FROM question
     WHERE id = %(id)s
 """
 
 read_answers = """
-    SELECT * FROM answers
+    SELECT * FROM answer
     WHERE question_id = %(id)s
-    ORDER BY time_submitted DESC
+    ORDER BY created DESC
 """
 
 read_answer = """
-    SELECT * FROM answers
+    SELECT * FROM answer
     WHERE id = %(id)s
 """
 
 read_comment = """
-    SELECT * FROM comments
+    SELECT * FROM comment
     WHERE id = %(id)s
 """
 
 read_existing_tags = """
-    SELECT * FROM tags
+    SELECT * FROM tag
 """
 
 read_tags_for_question = """
-    SELECT tags.name, tags.id
-    FROM tags JOIN tags_to_questions ON tags.id = tags_to_questions.tag_id
+    SELECT tag.name, tag.id
+    FROM tag JOIN tag_to_question ON tag.id = tag_to_question.tag_id
     WHERE question_id = %(question_id)s
-    ORDER BY tags.name
+    ORDER BY tag.name
 """
 
 read_tag_id_for_tag_name = """
-    SELECT id FROM tags
+    SELECT id FROM tag
     WHERE name=%(name)s
 """
 
 read_comments_for_question = """
-    SELECT * FROM comments
+    SELECT * FROM comment
     WHERE question_id = %(question_id)s
-    ORDER BY time_submitted DESC
+    ORDER BY created DESC
 """
 
 read_comments_for_answer = """
-    SELECT * FROM comments
+    SELECT * FROM comment
     WHERE answer_id = %(answer_id)s
-    ORDER BY time_submitted DESC
+    ORDER BY created DESC
 """
 
 read_latest_content_match_id = """
-    SELECT id FROM questions
+    SELECT id FROM question
     WHERE title = %(title)s
-    ORDER BY time_submitted DESC
+    ORDER BY created DESC
     LIMIT 1
 """
 
 read_question_id_for_answer_id = """
-    SELECT question_id FROM answers
+    SELECT question_id FROM answer
     WHERE id = %(id)s
 """
 
 add_question = """
-    INSERT INTO questions
+    INSERT INTO question
         (title, body, image_url)
     VALUES
         (%(title)s, %(body)s, %(image_url)s)
 """
 
 add_new_tag = """
-    INSERT INTO tags
+    INSERT INTO tag
         (name)
     VALUES
         (%(name)s)
 """
 
 add_existing_tag_to_question = """
-    INSERT INTO tags_to_questions
+    INSERT INTO tag_to_question
         (question_id, tag_id)
     VALUES
         (%(question_id)s, %(tag_id)s)
 """
 
 add_answer = """
-    INSERT INTO answers
+    INSERT INTO answer
         (question_id, body, image_url)
     VALUES
         (%(question_id)s, %(body)s, %(image_url)s)
 """
 
 add_question_comment = """
-    INSERT INTO comments
+    INSERT INTO comment
         (question_id, body)
     VALUES
         (%(question_id)s, %(body)s)
 """
 
 add_answer_comment = """
-    INSERT INTO comments
+    INSERT INTO comment
         (answer_id, body)
     VALUES
         (%(answer_id)s, %(body)s)
 """
 
 update_question = """
-    UPDATE questions
+    UPDATE question
     SET title=%(title)s, body=%(body)s, image_url=%(image_url)s
     WHERE id=%(id)s
 """
 
 update_answer = """
-    UPDATE answers
+    UPDATE answer
     SET body=%(body)s, image_url=%(image_url)s
     WHERE id=%(id)s
 """
 
 update_comment = """
-    UPDATE comments
+    UPDATE comment
     SET body=%(body)s
     WHERE id=%(id)s
 """
 
 update_question_vote_count = """
-    UPDATE questions
+    UPDATE question
     SET vote_count = vote_count + %(value)s
     WHERE id = %(id)s
 """
 
 update_answer_vote_count = """
-    UPDATE answers
+    UPDATE answer
     SET vote_count = vote_count + %(value)s
     WHERE id = %(id)s
 """
 
 increment_question_view_count = """
-    UPDATE questions
+    UPDATE question
     SET view_count = view_count + 1
     WHERE id = %(id)s
 """
 
 delete_question = """
-    DELETE FROM questions
+    DELETE FROM question
     WHERE id = %(id)s
 """
 
 delete_tag_from_question = """
-    DELETE FROM tags_to_questions
+    DELETE FROM tag_to_question
     WHERE question_id = %(question_id)s AND tag_id = %(tag_id)s
 """
 
 delete_answer = """
-    DELETE FROM answers
+    DELETE FROM answer
     WHERE id = %(id)s
 """
 
 delete_comment = """
-    DELETE FROM comments
+    DELETE FROM comment
     WHERE id = %(id)s
 """
