@@ -23,7 +23,7 @@ CREATE TABLE question (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
-    body VARCHAR(30000),
+    body TEXT,
     image_url VARCHAR(2083),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
@@ -34,7 +34,7 @@ CREATE TABLE answer (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     question_id INT NOT NULL,
-    body VARCHAR(30000) NOT NULL,
+    body TEXT NOT NULL,
     image_url VARCHAR(2083),
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
@@ -47,7 +47,7 @@ CREATE TABLE comment (
     user_id INT NOT NULL,
     question_id INT DEFAULT NULL,
     answer_id INT DEFAULT NULL,
-    body VARCHAR(30000),
+    body TEXT,
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
@@ -56,7 +56,7 @@ CREATE TABLE comment (
 CREATE TABLE tag (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT NOT NULL,                                  -- First user/creator of tag
     created DATETIME NOT NULL DEFAULT NOW(),
     UNIQUE KEY (name)
 );
