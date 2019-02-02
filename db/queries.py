@@ -211,9 +211,15 @@ update_answer_vote_count = """
 """
 
 increment_question_view_count = """
-    UPDATE question
-    SET view_count = view_count + 1
-    WHERE id = %(id)s
+    INSERT INTO view
+        (user_id, question_id, count)
+    VALUES
+        (%(user_id)s, %(question_id)s, 1)
+    ON DUPLICATE KEY UPDATE count =
+        IF(
+          TIMESTAMPDIFF(MINUTE, IFNULL(last_updated, created), NOW()) > 10,
+          count+1,
+          count);
 """
 
 delete_question = """

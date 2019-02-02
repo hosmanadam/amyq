@@ -18,9 +18,8 @@ def get_questions(connection, cursor, order_by, order_direction, search=''):
 
 
 @connection_handler(dictionary=True)
-def get_question(connection, cursor, question_id, increment_view_count=False):
-    if increment_view_count:
-        cursor.execute(queries.increment_question_view_count, params={'id': question_id})
+def get_question(connection, cursor, question_id):
+    cursor.execute(queries.increment_question_view_count, params={'user_id': 1, 'question_id': question_id})  # TODO: replace with actual user_id
     # Get question
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
