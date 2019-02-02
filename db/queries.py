@@ -46,6 +46,7 @@ read_question = """
         question.id,
         question.title,
         question.body,
+        question.image_url,
         question.created,
         question.last_updated,
         user.username,
@@ -86,6 +87,7 @@ read_answers = """
     SELECT
         answer.id,
         answer.body,
+        answer.image_url,
         answer.created,
         answer.last_updated,
         user.username,
