@@ -99,11 +99,12 @@ read_comment = """
 """
 
 read_existing_tags = """
-    SELECT * FROM tag
+    SELECT tag.id, tag.name, tag.user_id
+    FROM tag
 """
 
 read_tags_for_question = """
-    SELECT tag.name, tag.id
+    SELECT tag.id, tag.name, tag.user_id
     FROM tag JOIN tag_to_question ON tag.id = tag_to_question.tag_id
     WHERE question_id = %(question_id)s
     ORDER BY tag.name
