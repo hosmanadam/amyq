@@ -91,7 +91,8 @@ CREATE TABLE vote (
     answer_id INT DEFAULT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
-    UNIQUE KEY (user_id, question_id, answer_id)
+    UNIQUE KEY (user_id, question_id),
+    UNIQUE KEY (user_id, answer_id)
 );
 
 

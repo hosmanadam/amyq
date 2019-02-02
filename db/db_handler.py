@@ -2,6 +2,8 @@ from db.cnx import connection_handler
 from db import queries
 
 
+# TODO: replace mock user id's with actual user_id
+
 @connection_handler(dictionary=True)
 def get_questions(connection, cursor, order_by, order_direction, search=''):
     cursor.execute(
@@ -19,7 +21,7 @@ def get_questions(connection, cursor, order_by, order_direction, search=''):
 
 @connection_handler(dictionary=True)
 def get_question(connection, cursor, question_id):
-    cursor.execute(queries.increment_question_view_count, params={'user_id': 1, 'question_id': question_id})  # TODO: replace with actual user_id
+    cursor.execute(queries.increment_question_view_count, params={'user_id': 1, 'question_id': question_id})
     # Get question
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
@@ -30,7 +32,7 @@ def get_question(connection, cursor, question_id):
     cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
     question_comments = cursor.fetchall()
     # Get its answers with their comments
-    cursor.execute(queries.read_answers, params={'id': question_id})
+    cursor.execute(queries.read_answers, params={'question_id': question_id})
     answers = cursor.fetchall()
     for answer in answers:
         cursor.execute(queries.read_comments_for_answer, params={'answer_id': answer['id']})
@@ -93,7 +95,7 @@ def add_question(connection, cursor, form):
     title = form['title']
     body = form['body'] or None
     image_url = form['image_url'] or None
-    cursor.execute(queries.add_question, params={'user_id': 1, 'title': title, 'body': body, 'image_url': image_url})  # TODO: replace with actual user_id
+    cursor.execute(queries.add_question, params={'user_id': 1, 'title': title, 'body': body, 'image_url': image_url})
 
 
 @connection_handler(dictionary=True)
@@ -150,15 +152,15 @@ def update_comment(connection, cursor, form, comment_id):
 
 
 @connection_handler(dictionary=True)
-def update_question_vote_count(connection, cursor, direction, id_):
+def update_question_vote_count(connection, cursor, direction, question_id):
     value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_question_vote_count, params={'user_id': 1, 'value': value, 'id': id_})
+    cursor.execute(queries.update_question_vote_count, params={'user_id': 1, 'value': value, 'question_id': question_id})
 
 
 @connection_handler(dictionary=True)
-def update_answer_vote_count(connection, cursor, direction, id_):
+def update_answer_vote_count(connection, cursor, direction, answer_id):
     value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_answer_vote_count, params={'user_id': 1, 'value': value, 'id': id_})
+    cursor.execute(queries.update_answer_vote_count, params={'user_id': 1, 'value': value, 'answer_id': answer_id})
 
 
 @connection_handler(dictionary=True)

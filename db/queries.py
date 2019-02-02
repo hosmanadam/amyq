@@ -83,9 +83,32 @@ read_question = """
 """
 
 read_answers = """
-    SELECT * FROM answer
-    WHERE question_id = %(id)s
-    ORDER BY created DESC
+    SELECT
+        answer.id,
+        answer.body,
+        answer.created,
+        answer.last_updated,
+        user.username,
+        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
+
+    FROM
+        answer
+
+        JOIN user ON answer.user_id = user.id
+
+        LEFT JOIN (
+            SELECT
+                answer_id,
+                SUM(value) AS count
+            FROM vote
+            GROUP BY answer_id
+        ) AS votes ON answer.id = votes.answer_id
+
+    WHERE
+        answer.question_id = %(question_id)s
+
+    GROUP BY
+        answer.id
 """
 
 read_answer = """

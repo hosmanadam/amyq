@@ -100,13 +100,13 @@ def edit_comment(comment_id):
 
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
 def vote_on_question(question_id, direction):
-    db_handler.update_question_vote_count(direction=direction, id_=question_id)
+    db_handler.update_question_vote_count(direction=direction, question_id=question_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/vote-<direction>', methods=['POST'])
 def vote_on_answer(answer_id, direction):
-    db_handler.update_answer_vote_count(direction=direction, id_=answer_id)
+    db_handler.update_answer_vote_count(direction=direction, answer_id=answer_id)
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
     return redirect(f'/question/{question_id}')
 
