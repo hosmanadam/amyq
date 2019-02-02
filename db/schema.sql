@@ -68,7 +68,7 @@ CREATE TABLE tag_to_question (
     tag_id INT NOT NULL,
     user_id INT NOT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
-    UNIQUE KEY (user_id, question_id)
+    UNIQUE KEY (tag_id, question_id)
 );
 
 
