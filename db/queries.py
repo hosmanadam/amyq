@@ -140,44 +140,44 @@ read_question_id_for_answer_id = """
 
 add_question = """
     INSERT INTO question
-        (title, body, image_url)
+        (user_id, title, body, image_url)
     VALUES
-        (%(title)s, %(body)s, %(image_url)s)
+        (%(user_id)s, %(title)s, %(body)s, %(image_url)s)
 """
 
 add_new_tag = """
     INSERT INTO tag
-        (name)
+        (name, user_id)
     VALUES
-        (%(name)s)
+        (%(name)s, %(user_id)s)
 """
 
 add_existing_tag_to_question = """
     INSERT INTO tag_to_question
-        (question_id, tag_id)
+        (question_id, tag_id, user_id)
     VALUES
-        (%(question_id)s, %(tag_id)s)
+        (%(question_id)s, %(tag_id)s, %(user_id)s)
 """
 
 add_answer = """
     INSERT INTO answer
-        (question_id, body, image_url)
+        (user_id, question_id, body, image_url)
     VALUES
-        (%(question_id)s, %(body)s, %(image_url)s)
+        (%(user_id)s, %(question_id)s, %(body)s, %(image_url)s)
 """
 
 add_question_comment = """
     INSERT INTO comment
-        (question_id, body)
+        (user_id, question_id, body)
     VALUES
-        (%(question_id)s, %(body)s)
+        (%(user_id)s, %(question_id)s, %(body)s)
 """
 
 add_answer_comment = """
     INSERT INTO comment
-        (answer_id, body)
+        (user_id, answer_id, body)
     VALUES
-        (%(answer_id)s, %(body)s)
+        (%(user_id)s, %(answer_id)s, %(body)s)
 """
 
 update_question = """
@@ -199,15 +199,19 @@ update_comment = """
 """
 
 update_question_vote_count = """
-    UPDATE question
-    SET vote_count = vote_count + %(value)s
-    WHERE id = %(id)s
+    INSERT INTO vote
+        (user_id, question_id, value)
+    VALUES
+        (%(user_id)s, %(question_id)s, %(value)s)
+    ON DUPLICATE KEY UPDATE value = %(value)s
 """
 
 update_answer_vote_count = """
-    UPDATE answer
-    SET vote_count = vote_count + %(value)s
-    WHERE id = %(id)s
+    INSERT INTO vote
+        (user_id, answer_id, value)
+    VALUES
+        (%(user_id)s, %(answer_id)s, %(value)s)
+    ON DUPLICATE KEY UPDATE value = %(value)s
 """
 
 increment_question_view_count = """
