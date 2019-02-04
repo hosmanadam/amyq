@@ -159,6 +159,12 @@ read_latest_content_match_id = """
     LIMIT 1
 """
 
+read_password_hash_for_username = """
+    SELECT password_hash
+    FROM user
+    WHERE username = %(username)s
+"""
+
 read_question_id_for_answer_id = """
     SELECT question_id FROM answer
     WHERE id = %(id)s
