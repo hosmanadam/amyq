@@ -2,15 +2,14 @@ from db.cnx import connection_handler
 from db import queries
 
 
+# TODO: replace mock user id's with actual user_id
+
 @connection_handler(dictionary=True)
-def get_questions(connection, cursor, order_by, order_direction, search):
-    if search:
-        cursor.execute(
-            queries.read_questions_for_search,
-            params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
-        )
-    else:
-        cursor.execute(queries.read_questions, params={'order_by': order_by, 'order_direction': order_direction})
+def get_questions(connection, cursor, order_by, order_direction, search=''):
+    cursor.execute(
+        queries.read_questions_for_search,
+        params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
+    )
     questions = cursor.fetchall()
     questions_ordered = sorted(
         questions,
@@ -21,9 +20,8 @@ def get_questions(connection, cursor, order_by, order_direction, search):
 
 
 @connection_handler(dictionary=True)
-def get_question(connection, cursor, question_id, increment_view_count=False):
-    if increment_view_count:
-        cursor.execute(queries.increment_question_view_count, params={'id': question_id})
+def get_question(connection, cursor, question_id):
+    cursor.execute(queries.increment_question_view_count, params={'user_id': 1, 'question_id': question_id})
     # Get question
     cursor.execute(queries.read_question, params={'id': question_id})
     question = cursor.fetchall()[0]
@@ -34,7 +32,7 @@ def get_question(connection, cursor, question_id, increment_view_count=False):
     cursor.execute(queries.read_comments_for_question, params={'question_id': question_id})
     question_comments = cursor.fetchall()
     # Get its answers with their comments
-    cursor.execute(queries.read_answers, params={'id': question_id})
+    cursor.execute(queries.read_answers, params={'question_id': question_id})
     answers = cursor.fetchall()
     for answer in answers:
         cursor.execute(queries.read_comments_for_answer, params={'answer_id': answer['id']})
@@ -97,17 +95,17 @@ def add_question(connection, cursor, form):
     title = form['title']
     body = form['body'] or None
     image_url = form['image_url'] or None
-    cursor.execute(queries.add_question, params={'title': title, 'body': body, 'image_url': image_url})
+    cursor.execute(queries.add_question, params={'user_id': 1, 'title': title, 'body': body, 'image_url': image_url})
 
 
 @connection_handler(dictionary=True)
 def add_existing_tag_to_question(connection, cursor, question_id, tag_id):
-    cursor.execute(queries.add_existing_tag_to_question, params={'question_id': question_id, 'tag_id': tag_id})
+    cursor.execute(queries.add_existing_tag_to_question, params={'user_id': 1, 'question_id': question_id, 'tag_id': tag_id})
 
 
 @connection_handler(dictionary=True)
 def add_new_tag_to_question(connection, cursor, question_id, tag_name):
-    cursor.execute(queries.add_new_tag, params={'name': tag_name})
+    cursor.execute(queries.add_new_tag, params={'user_id': 1, 'name': tag_name})
     cursor.execute(queries.read_tag_id_for_tag_name, params={'name': tag_name})
     tag_id = cursor.fetchall()[0]['id']
     add_existing_tag_to_question(connection, cursor, question_id, tag_id)
@@ -117,19 +115,19 @@ def add_new_tag_to_question(connection, cursor, question_id, tag_name):
 def add_answer(connection, cursor, form, question_id):
     body = form['body']
     image_url = form['image_url'] or None
-    cursor.execute(queries.add_answer, params={'question_id': question_id, 'body': body, 'image_url': image_url})
+    cursor.execute(queries.add_answer, params={'user_id': 1, 'question_id': question_id, 'body': body, 'image_url': image_url})
 
 
 @connection_handler(dictionary=True)
 def add_question_comment(connection, cursor, form, question_id):
     body = form['body']
-    cursor.execute(queries.add_question_comment, params={'question_id': question_id, 'body': body})
+    cursor.execute(queries.add_question_comment, params={'user_id': 1, 'question_id': question_id, 'body': body})
 
 
 @connection_handler(dictionary=True)
 def add_answer_comment(connection, cursor, form, answer_id):
     body = form['body']
-    cursor.execute(queries.add_answer_comment, params={'answer_id': answer_id, 'body': body})
+    cursor.execute(queries.add_answer_comment, params={'user_id': 1, 'answer_id': answer_id, 'body': body})
 
 
 @connection_handler(dictionary=True)
@@ -154,15 +152,15 @@ def update_comment(connection, cursor, form, comment_id):
 
 
 @connection_handler(dictionary=True)
-def update_question_vote_count(connection, cursor, direction, id_):
+def update_question_vote_count(connection, cursor, direction, question_id):
     value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_question_vote_count, params={'value': value, 'id': id_})
+    cursor.execute(queries.update_question_vote_count, params={'user_id': 1, 'value': value, 'question_id': question_id})
 
 
 @connection_handler(dictionary=True)
-def update_answer_vote_count(connection, cursor, direction, id_):
+def update_answer_vote_count(connection, cursor, direction, answer_id):
     value = 1 if direction == 'up' else -1
-    cursor.execute(queries.update_answer_vote_count, params={'value': value, 'id': id_})
+    cursor.execute(queries.update_answer_vote_count, params={'user_id': 1, 'value': value, 'answer_id': answer_id})
 
 
 @connection_handler(dictionary=True)

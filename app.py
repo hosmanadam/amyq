@@ -29,8 +29,8 @@ def questions(page_number):
     if request.args.get('ordering'):
         order_by, order_direction = request.args.get('ordering').split('-')
     else:
-        order_by, order_direction = 'time_submitted', 'DESC'
-    search = request.args.get('search')
+        order_by, order_direction = 'created', 'DESC'
+    search = request.args.get('search') or ''
     if request.args.get('questions_per_page'):
         questions_per_page = int(request.args.get('questions_per_page'))
     else:
@@ -41,7 +41,7 @@ def questions(page_number):
     return render_template(
         'questions.html',
         questions=questions,
-        ordering=request.args.get('ordering') or 'time_submitted-DESC',
+        ordering=request.args.get('ordering') or 'created-DESC',
         search=search,
         page_number=int(page_number),
         page_numbers=page_numbers,
@@ -52,7 +52,7 @@ def questions(page_number):
 
 @app.route('/question/<int:question_id>')
 def question(question_id):
-    question = db_handler.get_question(question_id, increment_view_count=True)
+    question = db_handler.get_question(question_id)
     return render_template('question.html', question=question)
 
 
@@ -101,13 +101,13 @@ def edit_comment(comment_id):
 
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
 def vote_on_question(question_id, direction):
-    db_handler.update_question_vote_count(direction=direction, id_=question_id)
+    db_handler.update_question_vote_count(direction=direction, question_id=question_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/vote-<direction>', methods=['POST'])
 def vote_on_answer(answer_id, direction):
-    db_handler.update_answer_vote_count(direction=direction, id_=answer_id)
+    db_handler.update_answer_vote_count(direction=direction, answer_id=answer_id)
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
     return redirect(f'/question/{question_id}')
 
