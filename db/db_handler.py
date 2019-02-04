@@ -138,6 +138,37 @@ def add_answer_comment(connection, cursor, form, answer_id):
 
 
 @connection_handler(dictionary=True)
+def add_user(
+    connection,
+    cursor,
+    username,
+    password_hash,
+    email,
+    first_name,
+    last_name,
+    locality,
+    country,
+    facebook_username,
+    github_username,
+    twitter_username,
+    linkedin_profile_url,
+):
+    cursor.execute(queries.add_user, params={
+        'username': username,
+        'password_hash': password_hash,
+        'email': email,
+        'first_name': first_name,
+        'last_name': last_name,
+        'locality': locality or None,
+        'country': country or None,
+        'facebook_username': facebook_username or None,
+        'github_username': github_username or None,
+        'twitter_username': twitter_username or None,
+        'linkedin_profile_url': linkedin_profile_url or None,
+    })
+
+
+@connection_handler(dictionary=True)
 def update_question(connection, cursor, form, question_id):
     title = form['title']
     body = form['body'] or None

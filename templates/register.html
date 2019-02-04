@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}{{ super() }}
+Register
+{% endblock %}
+
+{% block body %}
+
+<h3>Enter your information here:</h3>
+<form action="/register" method="post">
+
+    <input type="text" name="username" placeholder="username" required><br>
+    <input type="password" name="password" placeholder="password" required><br>
+    <input type="email" name="email" placeholder="email" required><br>
+    <input type="text" name="first_name" placeholder="first_name" required><br>
+    <input type="text" name="last_name" placeholder="last_name" required><br>
+
+    <input type="text" name="locality" placeholder="locality"><br>
+    <input type="text" name="country" placeholder="country"><br>
+    <input type="text" name="facebook_username" placeholder="facebook_username"><br>
+    <input type="text" name="github_username" placeholder="github_username"><br>
+    <input type="text" name="twitter_username" placeholder="twitter_username"><br>
+    <input type="text" name="linkedin_profile_url" placeholder="linkedin_profile_url"><br>
+
+    <input type="submit">
+</form>
+
+{% endblock %}

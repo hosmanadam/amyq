@@ -212,6 +212,13 @@ add_answer_comment = """
         (%(user_id)s, %(answer_id)s, %(body)s)
 """
 
+add_user = """
+    INSERT INTO user
+        (username, password_hash, email, first_name, last_name, locality, country, facebook_username, github_username, twitter_username, linkedin_profile_url) 
+    VALUES
+        (%(username)s, %(password_hash)s, %(email)s, %(first_name)s, %(last_name)s, %(locality)s, %(country)s, %(facebook_username)s, %(github_username)s, %(twitter_username)s, %(linkedin_profile_url)s)
+"""
+
 update_question = """
     UPDATE question
     SET title=%(title)s, body=%(body)s, image_url=%(image_url)s

@@ -12,7 +12,7 @@ from flask import (
 
 from db import db_handler
 from util import paginate
-from auth import authenticate
+import auth
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
@@ -32,8 +32,16 @@ def login():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        return str(authenticate(username, password))
+        return str(auth.login(username, password))
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+    elif request.method == 'POST':
+        auth.register(request.form)
+        return redirect('/login')
 
 
 @app.route('/questions/<page_number>')
