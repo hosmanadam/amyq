@@ -7,6 +7,7 @@ from flask import (
     render_template,
     redirect,
     request,
+    session,
 )
 
 from db import db_handler
