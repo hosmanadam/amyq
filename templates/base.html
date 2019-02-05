@@ -13,6 +13,7 @@
             <h5><a href="/">Home</a></h5>
             {% if session.get('logged_in') == True %}
                 <h5>Logged in as <strong>{{ session.get('username') }}</strong></h5>
+                <h5><a href="/logout">Log out</a></h5>
             {% else %}
             <h5><a href="/login">Login</a></h5>
             <h5><a href="/register">Register</a></h5>

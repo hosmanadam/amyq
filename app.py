@@ -39,6 +39,12 @@ def login():
             return render_template('login.html', error='Incorrect username or password.')
 
 
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/questions/1')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
