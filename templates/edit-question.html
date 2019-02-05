@@ -10,7 +10,7 @@ Edit question #{{ question['id'] }}
 {% block body %}
 
 <h2>Edit question #{{ question['id'] }} here:</h2>
-<form action="/question/{{ question['id'] }}/submit-edited-question" method="post">
+<form method="post">
 
     <label for="summary">Summary:</label><br>
     <input id="summary" type="text" name="title" placeholder="e.g. &quot;What's the meaning of life?&quot;" value="{{ question['title'] }}" required><br>

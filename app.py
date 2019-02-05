@@ -19,7 +19,6 @@ app.secret_key = os.urandom(16)
 
 
 @app.route('/')
-@app.route('/questions')
 @app.route('/questions/')
 def index():
     return redirect('/questions/1')
@@ -70,53 +69,91 @@ def questions(page_number):
     )
 
 
-@app.route('/question/<int:question_id>')
+@app.route('/question/<int:question_id>/')
 def question(question_id):
     question = db_handler.get_question(question_id)
     return render_template('question.html', question=question)
 
 
-@app.route('/add-question')
+@app.route('/add-question', methods=['GET', 'POST'])
 def add_question():
-    return render_template('add-question.html', questions=questions)
+    if request.method == 'GET':
+        return render_template('add-question.html', questions=questions)
+    if request.method == 'POST':
+        db_handler.add_question(request.form)
+        question_id = db_handler.get_latest_content_match_id(request.form)
+        return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<int:question_id>/add-tag')
+@app.route('/question/<int:question_id>/add-tag', methods=['GET', 'POST'])
 def add_tag_to_question(question_id):
-    question = db_handler.get_question(question_id)
-    existing_tags = db_handler.get_existing_tags()
-    other_tags = [tag for tag in existing_tags if tag not in question.get('tags')]
-    return render_template('add-tag.html', question=question, other_tags=other_tags)
+    if request.method == 'GET':
+        question = db_handler.get_question(question_id)
+        existing_tags = db_handler.get_existing_tags()
+        other_tags = [tag for tag in existing_tags if tag not in question.get('tags')]
+        return render_template('add-tag.html', question=question, other_tags=other_tags)
+    if request.method == 'POST':
+        if request.form.get('new_tag_name'):
+            tag_name = request.form.get('new_tag_name')
+            db_handler.add_new_tag_to_question(question_id, tag_name)
+            return redirect(f'/question/{question_id}')
+        if request.form.get('tag_choice_id'):
+            tag_id = int(request.form.get('tag_choice_id'))
+            db_handler.add_existing_tag_to_question(question_id, tag_id)
+            return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<int:question_id>/add-comment')
+@app.route('/question/<int:question_id>/add-comment', methods=['GET', 'POST'])
 def add_question_comment(question_id):
-    question = db_handler.get_question(question_id)
-    return render_template('add-comment.html', question=question)
+    if request.method == 'GET':
+        question = db_handler.get_question(question_id)
+        return render_template('add-comment.html', question=question)
+    if request.method == 'POST':
+        db_handler.add_question_comment(request.form, question_id)
+        return redirect(f'/question/{question_id}')
 
 
-@app.route('/answer/<int:answer_id>/add-comment')
+@app.route('/answer/<int:answer_id>/add-comment', methods=['GET', 'POST'])
 def add_answer_comment(answer_id):
-    answer = db_handler.get_answer(answer_id)
-    return render_template('add-comment.html', answer=answer)
+    if request.method == 'GET':
+        answer = db_handler.get_answer(answer_id)
+        return render_template('add-comment.html', answer=answer)
+    if request.method == 'POST':
+        db_handler.add_answer_comment(request.form, answer_id)
+        question_id = db_handler.get_question_id_for_answer_id(answer_id)
+        return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<int:question_id>/edit')
+@app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = db_handler.get_question(question_id)
-    return render_template('edit-question.html', question=question)
+    if request.method == 'GET':
+        question = db_handler.get_question(question_id)
+        return render_template('edit-question.html', question=question)
+    if request.method == 'POST':
+        db_handler.update_question(request.form, question_id)
+        return redirect(f'/question/{question_id}')
 
 
-@app.route('/answer/<int:answer_id>/edit')
+@app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
-    answer = db_handler.get_answer(answer_id)
-    return render_template('edit-answer.html', answer=answer)
+    if request.method == 'GET':
+        answer = db_handler.get_answer(answer_id)
+        return render_template('edit-answer.html', answer=answer)
+    if request.method == 'POST':
+        db_handler.update_answer(request.form, answer_id)
+        question_id = db_handler.get_question_id_for_answer_id(answer_id)
+        return redirect(f'/question/{question_id}')
 
 
-@app.route('/comment/<int:comment_id>/edit')
+@app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
-    comment = db_handler.get_comment(comment_id)
-    return render_template('edit-comment.html', comment=comment)
+    if request.method == 'GET':
+        comment = db_handler.get_comment(comment_id)
+        return render_template('edit-comment.html', comment=comment)
+    if request.method == 'POST':
+        db_handler.update_comment(request.form, comment_id)
+        question_id = db_handler.get_question_id_for_comment_id(comment_id)
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
@@ -132,63 +169,9 @@ def vote_on_answer(answer_id, direction):
     return redirect(f'/question/{question_id}')
 
 
-@app.route('/submit-question', methods=['POST'])
-def submit_question():
-    db_handler.add_question(request.form)
-    question_id = db_handler.get_latest_content_match_id(request.form)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<int:question_id>/submit-existing-tag', methods=['POST'])
-def submit_existing_tag(question_id):
-    tag_id = int(request.form.get('tag_choice_id'))
-    db_handler.add_existing_tag_to_question(question_id, tag_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<int:question_id>/submit-new-tag', methods=['POST'])
-def submit_new_tag(question_id):
-    tag_name = request.form.get('new_tag_name')
-    db_handler.add_new_tag_to_question(question_id, tag_name)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/submit-answer/<int:question_id>', methods=['POST'])
+@app.route('/question/<int:question_id>/submit-answer', methods=['POST'])
 def submit_answer(question_id):
     db_handler.add_answer(request.form, question_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<int:question_id>/submit-comment', methods=['POST'])
-def submit_question_comment(question_id):
-    db_handler.add_question_comment(request.form, question_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/answer/<int:answer_id>/submit-comment', methods=['POST'])
-def submit_answer_comment(answer_id):
-    db_handler.add_answer_comment(request.form, answer_id)
-    question_id = db_handler.get_question_id_for_answer_id(answer_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/question/<int:question_id>/submit-edited-question', methods=['POST'])
-def submit_edited_question(question_id):
-    db_handler.update_question(request.form, question_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/answer/<int:answer_id>/submit-edited-answer', methods=['POST'])
-def submit_edited_answer(answer_id):
-    db_handler.update_answer(request.form, answer_id)
-    question_id = db_handler.get_question_id_for_answer_id(answer_id)
-    return redirect(f'/question/{question_id}')
-
-
-@app.route('/comment/<int:comment_id>/submit-edited-comment', methods=['POST'])
-def submit_edited_comment(comment_id):
-    db_handler.update_comment(request.form, comment_id)
-    question_id = db_handler.get_question_id_for_comment_id(comment_id)
     return redirect(f'/question/{question_id}')
 
 

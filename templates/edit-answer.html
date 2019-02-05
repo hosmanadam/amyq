@@ -10,7 +10,7 @@ Edit answer #{{ answer['id'] }}
 {% block body %}
 
 <h2>Edit answer #{{ answer['id'] }} here:</h2>
-<form action="/answer/{{ answer['id'] }}/submit-edited-answer" method="post">
+<form method="post">
 
     <label for="details">Details:</label><br>
     <textarea id="details" name="body">{{ answer['body'] }}</textarea><br>

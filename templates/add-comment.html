@@ -36,11 +36,8 @@
 
 <hr>
 
-{% if question %}
-    <form action="/question/{{ question['id'] }}/submit-comment" method="post">
-{% elif answer %}
-    <form action="/answer/{{ answer['id'] }}/submit-comment" method="post">
-{% endif %}
+    <form method="post">
+
         <label for="body">Add your comment:</label><br>
         <textarea id="body" name="body"></textarea><br>
 

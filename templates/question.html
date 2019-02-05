@@ -24,23 +24,23 @@
 
 <small>Submitted: {{ question['created'] }} Views: {{ question['view_count'] }} Votes: {{ question['vote_count'] }}</small><br>
 
-<form action="/question/{{ question['id'] }}/add-tag">
+<form action="add-tag">
     <input type="submit" value="Add tag" />
 </form>
 
-<form action="/question/{{ question['id'] }}/vote-up" method="POST">
+<form action="vote-up" method="POST">
     <input type="submit" value="Vote up" />
 </form>
 
-<form action="/question/{{ question['id'] }}/vote-down" method="POST">
+<form action="vote-down" method="POST">
     <input type="submit" value="Vote down" />
 </form>
 
-<form action="/question/{{ question['id'] }}/edit">
+<form action="edit">
     <input type="submit" value="Edit" />
 </form>
 
-<form action="/question/{{ question['id'] }}/delete">
+<form action="delete">
     <input type="submit" value="Delete" />
 </form>
 
@@ -61,7 +61,7 @@
     {% endfor %}
 {% endif %}
 
-<small><a href="/question/{{ question['id'] }}/add-comment">Add comment</a></small>
+<small><a href="add-comment">Add comment</a></small>
 
 {% if question.get('answers') %}
     <h3>Answers:</h3>
@@ -118,7 +118,7 @@
 
 {% endif %}
 
-    <form action="/submit-answer/{{ question['id'] }}" method="post">
+    <form action="submit-answer" method="post">
 
         <label for="details">Your answer:</label><br>
         <textarea id="details" name="body" minlength="10" required></textarea><br>

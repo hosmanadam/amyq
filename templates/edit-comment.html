@@ -10,7 +10,7 @@ Edit comment #{{ comment['id'] }}
 {% block body %}
 
 <h2>Edit comment #{{ comment['id'] }} here:</h2>
-<form action="/comment/{{ comment['id'] }}/submit-edited-comment" method="post">
+<form method="post">
 
     <textarea id="details" name="body">{{ comment['body'] }}</textarea><br>
 
