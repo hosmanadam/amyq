@@ -1,5 +1,7 @@
 import bcrypt
 from db import db_handler
+from functools import wraps
+from flask import render_template
 
 
 def login(username, password):
@@ -32,3 +34,15 @@ def register(form):
         twitter_username=form.get('twitter_username'),
         linkedin_profile_url=form.get('linkedin_profile_url'),
     )
+
+
+def needs_login(session):
+    def inner(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            if 'username' in session:
+                return fn(*args, **kwargs)
+            else:
+                return render_template('login.html', message='You need to log in to access this functionality.')
+        return wrapper
+    return inner

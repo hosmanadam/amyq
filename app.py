@@ -2,7 +2,6 @@ import math
 import os
 
 from flask import (
-    abort,
     Flask,
     render_template,
     redirect,
@@ -10,9 +9,9 @@ from flask import (
     session,
 )
 
+import auth
 from db import db_handler
 from util import paginate
-import auth
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
@@ -34,10 +33,9 @@ def login():
         user_info = auth.login(username, password)
         if user_info:
             session.update(user_info)
-            session['logged_in'] = True
             return redirect('/questions/1')
         else:
-            return render_template('login.html', error='Incorrect username or password.')
+            return render_template('login.html', message='Incorrect username or password.')
 
 
 @app.route('/logout')
@@ -82,12 +80,14 @@ def questions(page_number):
 
 
 @app.route('/question/<int:question_id>/')
+@auth.needs_login(session)
 def question(question_id):
     question = db_handler.get_question(question_id)
     return render_template('question.html', question=question)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def add_question():
     if request.method == 'GET':
         return render_template('add-question.html', questions=questions)
@@ -98,6 +98,7 @@ def add_question():
 
 
 @app.route('/question/<int:question_id>/add-tag', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def add_tag_to_question(question_id):
     if request.method == 'GET':
         question = db_handler.get_question(question_id)
@@ -116,6 +117,7 @@ def add_tag_to_question(question_id):
 
 
 @app.route('/question/<int:question_id>/add-comment', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def add_question_comment(question_id):
     if request.method == 'GET':
         question = db_handler.get_question(question_id)
@@ -126,6 +128,7 @@ def add_question_comment(question_id):
 
 
 @app.route('/answer/<int:answer_id>/add-comment', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def add_answer_comment(answer_id):
     if request.method == 'GET':
         answer = db_handler.get_answer(answer_id)
@@ -137,6 +140,7 @@ def add_answer_comment(answer_id):
 
 
 @app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def edit_question(question_id):
     if request.method == 'GET':
         question = db_handler.get_question(question_id)
@@ -147,6 +151,7 @@ def edit_question(question_id):
 
 
 @app.route('/answer/<int:answer_id>/edit', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def edit_answer(answer_id):
     if request.method == 'GET':
         answer = db_handler.get_answer(answer_id)
@@ -158,6 +163,7 @@ def edit_answer(answer_id):
 
 
 @app.route('/comment/<int:comment_id>/edit', methods=['GET', 'POST'])
+@auth.needs_login(session)
 def edit_comment(comment_id):
     if request.method == 'GET':
         comment = db_handler.get_comment(comment_id)
@@ -169,12 +175,14 @@ def edit_comment(comment_id):
 
 
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
+@auth.needs_login(session)
 def vote_on_question(question_id, direction):
     db_handler.update_question_vote_count(direction=direction, question_id=question_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/vote-<direction>', methods=['POST'])
+@auth.needs_login(session)
 def vote_on_answer(answer_id, direction):
     db_handler.update_answer_vote_count(direction=direction, answer_id=answer_id)
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
@@ -182,24 +190,28 @@ def vote_on_answer(answer_id, direction):
 
 
 @app.route('/question/<int:question_id>/submit-answer', methods=['POST'])
+@auth.needs_login(session)
 def submit_answer(question_id):
     db_handler.add_answer(request.form, question_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<int:question_id>/delete')
+@auth.needs_login(session)
 def delete_question(question_id):
     db_handler.delete_question(question_id)
     return redirect(f'/questions')
 
 
 @app.route('/question/<int:question_id>/tag/<int:tag_id>/delete')
+@auth.needs_login(session)
 def delete_tag_from_question(question_id, tag_id):
     db_handler.delete_tag_from_question(question_id, tag_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/delete')
+@auth.needs_login(session)
 def delete_answer(answer_id):
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
     db_handler.delete_answer(answer_id)
@@ -207,6 +219,7 @@ def delete_answer(answer_id):
 
 
 @app.route('/comment/<int:comment_id>/delete')
+@auth.needs_login(session)
 def delete_comment(comment_id):
     question_id = db_handler.get_question_id_for_comment_id(comment_id)
     db_handler.delete_comment(comment_id)

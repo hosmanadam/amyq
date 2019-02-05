@@ -11,7 +11,7 @@
         <main>
         <nav>
             <h5><a href="/">Home</a></h5>
-            {% if session.get('logged_in') == True %}
+            {% if session.get('username') %}
                 <h5>Logged in as <strong>{{ session.get('username') }}</strong></h5>
                 <h5><a href="/logout">Log out</a></h5>
             {% else %}
