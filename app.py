@@ -31,8 +31,9 @@ def login():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if auth.login(username, password):
-            session['username'] = username
+        user_info = auth.login(username, password)
+        if user_info:
+            session.update(user_info)
             session['logged_in'] = True
             return redirect('/questions/1')
         else:

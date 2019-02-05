@@ -73,10 +73,11 @@ def get_latest_content_match_id(connection, cursor, form):
 
 
 @connection_handler(dictionary=True)
-def get_password_hash_for_username(connection, cursor, username):
-    cursor.execute(queries.read_password_hash_for_username, params={'username': username})
-    password_hash = cursor.fetchall()[0]['password_hash']
-    return password_hash
+def get_user_info(connection, cursor, username):
+    cursor.execute(queries.read_user_info_for_username, params={'username': username})
+    user_info = cursor.fetchall()[0]
+    user_info['password_hash'] = bytes(user_info['password_hash'])
+    return user_info
 
 
 @connection_handler(dictionary=True)

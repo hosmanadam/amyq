@@ -3,11 +3,15 @@ from db import db_handler
 
 
 def login(username, password):
-    """Check that unhashed password matches hash stored in database"""
+    """Retrieve user info from db, compare hashes, return user info on match else `False`"""
     password = bytes(password, 'utf-8')
-    stored_hash = bytes(db_handler.get_password_hash_for_username(username))
+    try:
+        user_info = db_handler.get_user_info(username)
+    except IndexError:
+        return False
+    stored_hash = user_info.get('password_hash')
     if bcrypt.checkpw(password, stored_hash):
-        return True
+        return user_info
     else:
         return False
 
