@@ -5,7 +5,12 @@ read_questions_for_search = """
         question.created,
         question.last_updated,
         question.body,
+        user.id AS user_id,
         user.username,
+        user.first_name,
+        user.last_name,
+        user.locality,
+        user.country,
         ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
         ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
 
@@ -49,7 +54,12 @@ read_question = """
         question.image_url,
         question.created,
         question.last_updated,
+        user.id AS user_id,
         user.username,
+        user.first_name,
+        user.last_name,
+        user.locality,
+        user.country,
         ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
         ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
 
@@ -90,7 +100,12 @@ read_answers = """
         answer.image_url,
         answer.created,
         answer.last_updated,
+        user.id AS user_id,
         user.username,
+        user.first_name,
+        user.last_name,
+        user.locality,
+        user.country,
         ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
 
     FROM
@@ -111,6 +126,44 @@ read_answers = """
 
     GROUP BY
         answer.id
+"""
+
+read_comments_for_question = """
+    SELECT
+        comment.id,
+        comment.body,
+        comment.created,
+        comment.last_updated,
+        user.id AS user_id,
+        user.username,
+        user.first_name,
+        user.last_name,
+        user.locality,
+        user.country
+    FROM
+        comment
+        JOIN user ON comment.user_id = user.id
+    WHERE
+        comment.question_id = %(question_id)s
+"""
+
+read_comments_for_answer = """
+    SELECT
+        comment.id,
+        comment.body,
+        comment.created,
+        comment.last_updated,
+        user.id AS user_id,
+        user.username,
+        user.first_name,
+        user.last_name,
+        user.locality,
+        user.country
+    FROM
+        comment
+        JOIN user ON comment.user_id = user.id
+    WHERE
+        comment.answer_id = %(answer_id)s
 """
 
 read_answer = """
@@ -138,18 +191,6 @@ read_tags_for_question = """
 read_tag_id_for_tag_name = """
     SELECT id FROM tag
     WHERE name=%(name)s
-"""
-
-read_comments_for_question = """
-    SELECT * FROM comment
-    WHERE question_id = %(question_id)s
-    ORDER BY created DESC
-"""
-
-read_comments_for_answer = """
-    SELECT * FROM comment
-    WHERE answer_id = %(answer_id)s
-    ORDER BY created DESC
 """
 
 read_latest_content_match_id = """
