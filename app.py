@@ -82,7 +82,7 @@ def questions(page_number):
 @app.route('/question/<int:question_id>/')
 @auth.needs_login(session)
 def question(question_id):
-    question = db_handler.get_question(question_id)
+    question = db_handler.get_question(session.get('id'), question_id)
     return render_template('question.html', question=question)
 
 
@@ -92,7 +92,7 @@ def add_question():
     if request.method == 'GET':
         return render_template('add-question.html', questions=questions)
     if request.method == 'POST':
-        db_handler.add_question(request.form)
+        db_handler.add_question(request.form, session.get('id'))
         question_id = db_handler.get_latest_content_match_id(request.form)
         return redirect(f'/question/{question_id}')
 
@@ -101,18 +101,18 @@ def add_question():
 @auth.needs_login(session)
 def add_tag_to_question(question_id):
     if request.method == 'GET':
-        question = db_handler.get_question(question_id)
+        question = db_handler.get_question(session.get('id'), question_id)
         existing_tags = db_handler.get_existing_tags()
         other_tags = [tag for tag in existing_tags if tag not in question.get('tags')]
         return render_template('add-tag.html', question=question, other_tags=other_tags)
     if request.method == 'POST':
         if request.form.get('new_tag_name'):
             tag_name = request.form.get('new_tag_name')
-            db_handler.add_new_tag_to_question(question_id, tag_name)
+            db_handler.add_new_tag_to_question(session.get('id'), question_id, tag_name)
             return redirect(f'/question/{question_id}')
         if request.form.get('tag_choice_id'):
             tag_id = int(request.form.get('tag_choice_id'))
-            db_handler.add_existing_tag_to_question(question_id, tag_id)
+            db_handler.add_existing_tag_to_question(session.get('id'), question_id, tag_id)
             return redirect(f'/question/{question_id}')
 
 
@@ -120,10 +120,10 @@ def add_tag_to_question(question_id):
 @auth.needs_login(session)
 def add_question_comment(question_id):
     if request.method == 'GET':
-        question = db_handler.get_question(question_id)
+        question = db_handler.get_question(session.get('id'), question_id)
         return render_template('add-comment.html', question=question)
     if request.method == 'POST':
-        db_handler.add_question_comment(request.form, question_id)
+        db_handler.add_question_comment(session.get('id'), request.form, question_id)
         return redirect(f'/question/{question_id}')
 
 
@@ -134,7 +134,7 @@ def add_answer_comment(answer_id):
         answer = db_handler.get_answer(answer_id)
         return render_template('add-comment.html', answer=answer)
     if request.method == 'POST':
-        db_handler.add_answer_comment(request.form, answer_id)
+        db_handler.add_answer_comment(session.get('id'), request.form, answer_id)
         question_id = db_handler.get_question_id_for_answer_id(answer_id)
         return redirect(f'/question/{question_id}')
 
@@ -143,7 +143,7 @@ def add_answer_comment(answer_id):
 @auth.needs_login(session)
 def edit_question(question_id):
     if request.method == 'GET':
-        question = db_handler.get_question(question_id)
+        question = db_handler.get_question(session.get('id'), question_id)
         return render_template('edit-question.html', question=question)
     if request.method == 'POST':
         db_handler.update_question(request.form, question_id)
@@ -177,14 +177,14 @@ def edit_comment(comment_id):
 @app.route('/question/<int:question_id>/vote-<direction>', methods=['POST'])
 @auth.needs_login(session)
 def vote_on_question(question_id, direction):
-    db_handler.update_question_vote_count(direction=direction, question_id=question_id)
+    db_handler.update_question_vote_count(direction, session.get('id'), question_id)
     return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<int:answer_id>/vote-<direction>', methods=['POST'])
 @auth.needs_login(session)
 def vote_on_answer(answer_id, direction):
-    db_handler.update_answer_vote_count(direction=direction, answer_id=answer_id)
+    db_handler.update_answer_vote_count(direction, session.get('id'), answer_id)
     question_id = db_handler.get_question_id_for_answer_id(answer_id)
     return redirect(f'/question/{question_id}')
 
@@ -192,7 +192,7 @@ def vote_on_answer(answer_id, direction):
 @app.route('/question/<int:question_id>/submit-answer', methods=['POST'])
 @auth.needs_login(session)
 def submit_answer(question_id):
-    db_handler.add_answer(request.form, question_id)
+    db_handler.add_answer(session.get('id'), request.form, question_id)
     return redirect(f'/question/{question_id}')
 
 
