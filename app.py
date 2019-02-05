@@ -31,7 +31,12 @@ def login():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        return str(auth.login(username, password))
+        if auth.login(username, password):
+            session['username'] = username
+            session['logged_in'] = True
+            return redirect('/questions/1')
+        else:
+            return render_template('login.html', error='Incorrect username or password.')
 
 
 @app.route('/register', methods=['GET', 'POST'])
