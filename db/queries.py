@@ -1,3 +1,8 @@
+read_info_for_all_users = """
+    SELECT * FROM user
+"""
+
+
 read_questions_for_search = """
     SELECT
         question.id,

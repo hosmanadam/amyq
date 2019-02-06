@@ -53,6 +53,19 @@ def register():
         return redirect('/login')
 
 
+@app.route('/users')
+@auth.needs_login(session)
+def users():
+    users = db_handler.get_info_for_all_users()
+    for user in users:
+        user['full_name'] = f"{user.get('first_name')} {user.get('last_name')}"
+        if user.get('locality') and user.get('country'):
+            user['location'] = f"{user.get('locality')}, {user.get('country')}"
+        else:
+            user['location'] = user.get('locality') or user.get('country') or ''
+    return render_template('users.html', users=users)
+
+
 @app.route('/questions/<page_number>')
 def questions(page_number):
     if request.args.get('ordering'):

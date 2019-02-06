@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ super() }}
+Users
+{% endblock %}
+
+{% block body %}
+
+<table>
+    <tr>
+        <th>Username</th>
+        <th>Full name</th>
+        <th>Location</th>
+        <th>Member since</th>
+        <th>Social profiles</th>
+    </tr>
+{% for user in users %}
+    <tr>
+        <td><a href="/user/{{ user.get('username') }}">{{ user.get('username') }}</a></td>
+        <td>{{ user.get('full_name') }}</td>
+        <td>{{ user.get('location') }}</td>
+        <td>{{ user.get('created') }}</td>
+        <td>
+            {% if user.get('facebook_username') %}
+                <a href="https://www.facebook.com/{{ user.get('facebook_username') }}">FB</a>
+            {% endif %}
+
+            {% if user.get('github_username') %}
+                <a href="https://www.github.com/{{ user.get('github_username') }}">GH</a>
+            {% endif %}
+
+            {% if user.get('twitter_username') %}
+                <a href="https://www.twitter.com/{{ user.get('twitter_username') }}">TW</a>
+            {% endif %}
+
+            {% if user.get('linkedin_profile_url') %}
+                <a href="{{ user.get('linkedin_profile_url') }}">LI</a>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

@@ -3,6 +3,12 @@ from db import queries
 
 
 @connection_handler(dictionary=True)
+def get_info_for_all_users(connection, cursor):
+    cursor.execute(queries.read_info_for_all_users)
+    return cursor.fetchall()
+
+
+@connection_handler(dictionary=True)
 def get_questions(connection, cursor, order_by, order_direction, search=''):
     cursor.execute(
         queries.read_questions_for_search,
