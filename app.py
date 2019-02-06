@@ -30,12 +30,13 @@ def login():
     elif request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
+        source_url = request.form.get('source_url')
         user_info = auth.login(username, password)
         if user_info:
             session.update(user_info)
-            return redirect('/questions/1')
+            return redirect(source_url or '/questions/1')
         else:
-            return render_template('login.html', message='Incorrect username or password.')
+            return render_template('login.html', message='Incorrect username or password.', source_url=source_url)
 
 
 @app.route('/logout')

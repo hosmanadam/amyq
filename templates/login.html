@@ -13,6 +13,7 @@ Login
 <form action="/login" method="post">
     <input id="username" type="text" name="username" placeholder="username" required><br>
     <input id="password" type="password" name="password" placeholder="password" required><br>
+    <input name="source_url" type="hidden" value="{{ source_url }}">
     <input type="submit">
 </form>
 

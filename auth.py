@@ -1,7 +1,7 @@
 import bcrypt
 from db import db_handler
 from functools import wraps
-from flask import render_template
+from flask import render_template, request
 
 
 def login(username, password):
@@ -43,6 +43,10 @@ def needs_login(session):
             if 'username' in session:
                 return fn(*args, **kwargs)
             else:
-                return render_template('login.html', message='You need to log in to access this functionality.')
+                return render_template(
+                    'login.html',
+                    message='You need to log in to access this functionality.',
+                    source_url=request.base_url
+                )
         return wrapper
     return inner
