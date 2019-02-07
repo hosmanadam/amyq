@@ -2,6 +2,90 @@ read_info_for_all_users = """
     SELECT * FROM user
 """
 
+read_questions_by_user = """
+    SELECT
+        question.id,
+        question.title,
+        question.created,
+        question.last_updated,
+        question.body,
+        ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
+        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
+
+    FROM
+        question
+
+        JOIN user ON question.user_id = user.id
+
+        LEFT JOIN answer ON question.id = answer.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(count) AS count
+            FROM view
+            GROUP BY question_id
+        ) AS views ON question.id = views.question_id
+
+        LEFT JOIN (
+            SELECT
+                question_id,
+                SUM(value) AS count
+            FROM vote
+            GROUP BY question_id
+        ) AS votes ON question.id = votes.question_id
+
+    WHERE
+        user.username = %(username)s
+
+    GROUP BY
+        question.id
+"""
+
+read_answers_by_user = """
+    SELECT
+        answer.id,
+        answer.body,
+        answer.image_url,
+        answer.created,
+        answer.last_updated,
+        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count,
+        answer.question_id
+
+    FROM
+        answer
+
+        JOIN user ON answer.user_id = user.id
+
+        LEFT JOIN (
+            SELECT
+                answer_id,
+                SUM(value) AS count
+            FROM vote
+            GROUP BY answer_id
+        ) AS votes ON answer.id = votes.answer_id
+
+    WHERE
+        user.username = %(username)s
+
+    GROUP BY
+        answer.id
+"""
+
+read_comments_by_user = """
+    SELECT
+        comment.id,
+        comment.body,
+        comment.created,
+        IFNULL(comment.question_id, answer.question_id) AS question_id,
+        comment.answer_id
+    FROM
+        comment
+        JOIN user ON comment.user_id = user.id
+        LEFT JOIN answer ON comment.answer_id = answer.id
+    WHERE
+        user.username = %(username)s
+"""
 
 read_questions_for_search = """
     SELECT

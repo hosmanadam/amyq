@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}{{ super() }}
+{{ user.get('username') }}'s profile
+{% endblock %}
+
+{% block body %}
+
+<h3>User details</h3>
+<ul>
+    <li>Username: {{ user.get('username') }}</li>
+    <li>Full name: {{ user.get('full_name') }}</li>
+    <li>Location: {{ user.get('location') }}</li>
+    <li>Member since: {{ user.get('created') }}</li>
+    <li>Social profiles:
+        {% if user.get('facebook_username') %}
+            <a href="https://www.facebook.com/{{ user.get('facebook_username') }}" target=”_blank”>FB</a>
+        {% endif %}
+
+        {% if user.get('github_username') %}
+            <a href="https://www.github.com/{{ user.get('github_username') }}" target=”_blank”>GH</a>
+        {% endif %}
+
+        {% if user.get('twitter_username') %}
+            <a href="https://www.twitter.com/{{ user.get('twitter_username') }}" target=”_blank”>TW</a>
+        {% endif %}
+
+        {% if user.get('linkedin_profile_url') %}
+            <a href="{{ user.get('linkedin_profile_url') }}">LI</a>
+        {% endif %}
+    </li>
+</ul>
+
+<h3>Activity</h3>
+
+<h4>Questions</h4>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Views</th>
+        <th>Votes</th>
+        <th>Submitted</th>
+    </tr>
+    {% for question in questions %}
+        <tr>
+            <td><a href="/question/{{ question.get('id') }}">{{ question.get('title') }}</a></td>
+            <td>{{ question.get('view_count') }}</td>
+            <td>{{ question.get('vote_count') }}</td>
+            <td>{{ question.get('created') }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<h4>Answers</h4>
+<table>
+    <tr>
+        <th>Exerpt</th>
+        <th>Votes</th>
+        <th>Submitted</th>
+    </tr>
+    {% for answer in answers %}
+        <tr>
+            <td>
+                <a href="/question/{{ answer.get('question_id') }}#answer_{{ answer.get('id') }}">
+                    {{ answer.get('body')[:50] + ('...' if answer.get('body')|length > 50 else '') }}
+                </a>
+            </td>
+            <td>{{ answer.get('vote_count') }}</td>
+            <td>{{ answer.get('created') }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<h4>Comments</h4>
+<table>
+    <tr>
+        <th>Exerpt</th>
+        <th>Submitted</th>
+    </tr>
+    {% for comment in comments %}
+        <tr>
+            <td>
+                <a href="/question/{{ comment.get('question_id') }}#comment_{{ comment.get('id') }}">
+                    {{ comment.get('body')[:50] + ('...' if comment.get('body')|length > 50 else '') }}
+                </a>
+            </td>
+            <td>{{ comment.get('created') }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

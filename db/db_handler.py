@@ -9,6 +9,17 @@ def get_info_for_all_users(connection, cursor):
 
 
 @connection_handler(dictionary=True)
+def get_all_entries_by_user(connection, cursor, username):
+    cursor.execute(queries.read_questions_by_user, params={'username': username})
+    questions = cursor.fetchall()
+    cursor.execute(queries.read_answers_by_user, params={'username': username})
+    answers = cursor.fetchall()
+    cursor.execute(queries.read_comments_by_user, params={'username': username})
+    comments = cursor.fetchall()
+    return questions, answers, comments
+
+
+@connection_handler(dictionary=True)
 def get_questions(connection, cursor, order_by, order_direction, search=''):
     cursor.execute(
         queries.read_questions_for_search,

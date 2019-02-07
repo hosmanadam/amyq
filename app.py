@@ -11,7 +11,7 @@ from flask import (
 
 import auth
 from db import db_handler
-from util import paginate
+from util import paginate, prettify_user_info
 
 app = Flask(__name__)
 app.secret_key = os.urandom(16)
@@ -54,16 +54,21 @@ def register():
         return redirect('/login')
 
 
+@app.route('/user/<username>')
+@auth.needs_login(session)
+def user(username):
+    user = db_handler.get_user_info(username)
+    user = prettify_user_info(user)
+    questions, answers, comments = db_handler.get_all_entries_by_user(username)
+    return render_template('user.html', user=user, questions=questions, answers=answers, comments=comments)
+
+
 @app.route('/users')
 @auth.needs_login(session)
 def users():
     users = db_handler.get_info_for_all_users()
     for user in users:
-        user['full_name'] = f"{user.get('first_name')} {user.get('last_name')}"
-        if user.get('locality') and user.get('country'):
-            user['location'] = f"{user.get('locality')}, {user.get('country')}"
-        else:
-            user['location'] = user.get('locality') or user.get('country') or ''
+        user = prettify_user_info(user)
     return render_template('users.html', users=users)
 
 

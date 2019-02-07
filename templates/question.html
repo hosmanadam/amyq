@@ -5,59 +5,63 @@
 
 {% block body %}
 
-<h2>{{ question['title'] }}</h2>
+<div id="question_{{ question.get('id') }}" class="question">
+    <h2>{{ question['title'] }}</h2>
 
-{% if question['body'] %}
-    <p>{{ question['body'] }}</p>
-{% endif %}
+    {% if question['body'] %}
+        <p>{{ question['body'] }}</p>
+    {% endif %}
 
-{% if question['image_url'] %}
-    <img src="{{ question['image_url'] }}" alt="Illustration"><br>
-{% endif %}
+    {% if question['image_url'] %}
+        <img src="{{ question['image_url'] }}" alt="Illustration"><br>
+    {% endif %}
 
-{% for tag in question.get('tags') %}
+    {% for tag in question.get('tags') %}
 
-    #{{ tag['name'] }}
-    <a href="/question/{{ question['id'] }}/tag/{{ tag['id'] }}/delete">❌</a>
+        #{{ tag['name'] }}
+        <a href="/question/{{ question['id'] }}/tag/{{ tag['id'] }}/delete">❌</a>
 
-{% endfor %}<br>
+    {% endfor %}<br>
 
-<small><strong>{{ question.get('username') }}</strong> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small><br>
+    <small><a href="/user/{{ question.get('username') }}"><strong>{{ question.get('username') }}</strong></a> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small><br>
 
-<form action="add-tag">
-    <input type="submit" value="Add tag" />
-</form>
+    <form action="add-tag">
+        <input type="submit" value="Add tag" />
+    </form>
 
-<form action="vote-up" method="POST">
-    <input type="submit" value="Vote up" />
-</form>
+    <form action="vote-up" method="POST">
+        <input type="submit" value="Vote up" />
+    </form>
 
-<form action="vote-down" method="POST">
-    <input type="submit" value="Vote down" />
-</form>
+    <form action="vote-down" method="POST">
+        <input type="submit" value="Vote down" />
+    </form>
 
-<form action="edit">
-    <input type="submit" value="Edit" />
-</form>
+    <form action="edit">
+        <input type="submit" value="Edit" />
+    </form>
 
-<form action="delete">
-    <input type="submit" value="Delete" />
-</form>
+    <form action="delete">
+        <input type="submit" value="Delete" />
+    </form>
+</div>
 
 {% if question['comments'] %}
     <h4>Comments:</h4>
     {% for comment in question['comments'] %}
-        <p>{{ comment['body'] }}<br>
-            <small><strong>{{ comment.get('username') }}</strong> on {{ comment.get('created') }}</small><br>
-        </p>
+        <div id="comment_{{ comment.get('id') }}" class="question_comment">
+            <p>{{ comment['body'] }}<br>
+                <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small><br>
+            </p>
 
-        <form action="/comment/{{ comment['id'] }}/edit">
-            <input type="submit" value="Edit" />
-        </form>
+            <form action="/comment/{{ comment['id'] }}/edit">
+                <input type="submit" value="Edit" />
+            </form>
 
-        <form action="/comment/{{ comment['id'] }}/delete">
-            <input type="submit" value="Delete" />
-        </form>
+            <form action="/comment/{{ comment['id'] }}/delete">
+                <input type="submit" value="Delete" />
+            </form>
+        </div>
     {% endfor %}
 {% endif %}
 
@@ -67,42 +71,46 @@
     <h3>Answers:</h3>
 
     {% for answer in question.get('answers') %}
-        <p>{{ answer['body'] }}</p>
-        <small><strong>{{ answer.get('username') }}</strong> on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}</small><br>
-        {% if answer['image_url'] %}
-            <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
-        {% endif %}
+        <div id="answer_{{ answer.get('id') }}" class="answer">
+            <p>{{ answer['body'] }}</p>
+            <small><a href="/user/{{ answer.get('username') }}"><strong>{{ answer.get('username') }}</strong></a> on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}</small><br>
+            {% if answer['image_url'] %}
+                <img src="{{ answer['image_url'] }}" alt="Illustration"><br>
+            {% endif %}
 
-        <form action="/answer/{{ answer['id'] }}/vote-up" method="POST">
-            <input type="submit" value="Vote up" />
-        </form>
+            <form action="/answer/{{ answer['id'] }}/vote-up" method="POST">
+                <input type="submit" value="Vote up" />
+            </form>
 
-        <form action="/answer/{{ answer['id'] }}/vote-down" method="POST">
-            <input type="submit" value="Vote down" />
-        </form>
+            <form action="/answer/{{ answer['id'] }}/vote-down" method="POST">
+                <input type="submit" value="Vote down" />
+            </form>
 
-        <form action="/answer/{{ answer['id'] }}/edit">
-            <input type="submit" value="Edit" />
-        </form>
+            <form action="/answer/{{ answer['id'] }}/edit">
+                <input type="submit" value="Edit" />
+            </form>
 
-        <form action="/answer/{{ answer['id'] }}/delete">
-            <input type="submit" value="Delete" />
-        </form>
+            <form action="/answer/{{ answer['id'] }}/delete">
+                <input type="submit" value="Delete" />
+            </form>
+        </div>
 
         {% if answer['comments'] %}
             <h4>Comments:</h4>
             {% for comment in answer['comments'] %}
-                <p>{{ comment['body'] }}<br>
-                    <small><strong>{{ comment.get('username') }}</strong> on {{ comment.get('created') }}</small><br>
-                </p>
+                <div id="comment_{{ comment.get('id') }}" class="answer_comment">
+                    <p>{{ comment['body'] }}<br>
+                        <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small><br>
+                    </p>
 
-                <form action="/comment/{{ comment['id'] }}/edit">
-                    <input type="submit" value="Edit" />
-                </form>
+                    <form action="/comment/{{ comment['id'] }}/edit">
+                        <input type="submit" value="Edit" />
+                    </form>
 
-                <form action="/comment/{{ comment['id'] }}/delete">
-                    <input type="submit" value="Delete" />
-                </form>
+                    <form action="/comment/{{ comment['id'] }}/delete">
+                        <input type="submit" value="Delete" />
+                    </form>
+                </div>
             {% endfor %}
 
         {% endif %}
