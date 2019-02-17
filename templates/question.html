@@ -8,6 +8,7 @@
 {% block main %}
 
     {% set user_is_asker = (session.username == question.get('username')) %}
+    {% set accepted_answer_id = question.get('accepted_answer_id') %}
     {% include 'includes/question.html' %}
 
     <div class="comments">

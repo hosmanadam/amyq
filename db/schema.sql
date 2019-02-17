@@ -25,6 +25,7 @@ CREATE TABLE question (
     title VARCHAR(150) NOT NULL,
     body TEXT,
     image_url VARCHAR(2083),
+    accepted_answer_id INT DEFAULT NULL,
     created DATETIME NOT NULL DEFAULT NOW(),
     last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
@@ -37,8 +38,7 @@ CREATE TABLE answer (
     body TEXT NOT NULL,
     image_url VARCHAR(2083),
     created DATETIME NOT NULL DEFAULT NOW(),
-    last_updated DATETIME DEFAULT NULL ON UPDATE NOW(),
-    accepted DATETIME DEFAULT NULL
+    last_updated DATETIME DEFAULT NULL ON UPDATE NOW()
 );
 
 

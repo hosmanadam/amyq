@@ -208,6 +208,20 @@ def vote_on_answer(answer_id, direction):
     return redirect(f'/question/{question_id}')
 
 
+@app.route('/question/<int:question_id>/accept-answer/<int:answer_id>/', methods=['POST'])
+@auth.needs_login(session)
+def accept_answer(question_id, answer_id):
+    db_handler.accept_answer(question_id, answer_id)
+    return redirect(f'/question/{question_id}')
+
+
+@app.route('/question/<int:question_id>/unaccept-answer/<int:answer_id>/', methods=['POST'])
+@auth.needs_login(session)
+def unaccept_answer(question_id, answer_id):
+    db_handler.unaccept_answer(question_id, answer_id)
+    return redirect(f'/question/{question_id}')
+
+
 @app.route('/question/<int:question_id>/submit-answer', methods=['POST'])
 @auth.needs_login(session)
 def submit_answer(question_id):

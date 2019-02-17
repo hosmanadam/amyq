@@ -143,6 +143,7 @@ read_question = """
         question.image_url,
         question.created,
         question.last_updated,
+        question.accepted_answer_id,
         user.id AS user_id,
         user.username,
         user.first_name,
@@ -380,6 +381,12 @@ update_answer_vote_count = """
     VALUES
         (%(user_id)s, %(answer_id)s, %(value)s)
     ON DUPLICATE KEY UPDATE value = %(value)s
+"""
+
+update_accepted_answer = """
+    UPDATE question
+    SET accepted_answer_id = %(answer_id)s
+    WHERE id = %(id)s
 """
 
 increment_question_view_count = """

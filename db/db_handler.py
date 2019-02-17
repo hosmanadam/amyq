@@ -218,6 +218,16 @@ def update_answer_vote_count(connection, cursor, direction, user_id, answer_id):
 
 
 @connection_handler(dictionary=True)
+def accept_answer(connection, cursor, question_id, answer_id):
+    cursor.execute(queries.update_accepted_answer, params={'id': question_id, 'answer_id': answer_id})
+
+
+@connection_handler(dictionary=True)
+def unaccept_answer(connection, cursor, question_id, answer_id):
+    cursor.execute(queries.update_accepted_answer, params={'id': question_id, 'answer_id': None})
+
+
+@connection_handler(dictionary=True)
 def delete_question(connection, cursor, question_id):
     cursor.execute(queries.delete_question, params={'id': question_id})
 
