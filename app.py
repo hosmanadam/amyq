@@ -102,7 +102,7 @@ def questions(page_number):
 @auth.needs_login(session)
 def question(question_id):
     question = db_handler.get_question(session.get('id'), question_id)
-    return render_template('question.html', question=question)
+    return render_template('question.html', question=question, session=session)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])
