@@ -2,6 +2,10 @@
 
     <h1>{{ question.get('title') }}</h1>
 
+    <div class="entry-meta">
+        <small><a href="/user/{{ question.get('username') }}"><strong>{{ question.get('username') }}</strong></a> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small>
+    </div>
+
     {% if question.get('body') %}
         <p>{{ question.get('body') }}</p>
     {% endif %}
@@ -21,13 +25,8 @@
                 {% if session.username == question.get('username') %}
                     <a href="/question/{{ question.get('id') }}/tag/{{ tag.get('id') }}/delete">❌</a>
                 {% endif %}
-
             </div>
         {% endfor %}
-    </div>
-
-    <div class="entry-meta">
-        <small><a href="/user/{{ question.get('username') }}"><strong>{{ question.get('username') }}</strong></a> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small>
     </div>
 
     <div class="button-row">

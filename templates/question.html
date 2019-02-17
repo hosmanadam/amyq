@@ -5,45 +5,49 @@
     {{ question.get('title')[:50] + ('...' if question.get('title')|length > 50 else '') }}
 {% endblock %}
 
-{% block body %}
+{% block main %}
 
     {% include 'includes/question.html' %}
 
-    {% if question.get('comments') %}
-        <div class="question-comments">
-            <h2>Comments:</h2>
+    <div class="comments">
+        {% if question.get('comments') %}
             {% for comment in question.get('comments') %}
                 {% include 'includes/comment.html' %}
             {% endfor %}
-        </div>
-    {% endif %}
+            <span><a href="add-comment">Add comment</a></span>
+        {% else %}
+            <span><a href="add-comment">Be the first to comment</a></span>
+        {% endif %}
+    </div>
 
-    <small><a href="add-comment">Add comment</a></small>
-
-    {% if question.get('answers') %}
+    {% set answer_count = question.get('answers')|length %}
+    {% if answer_count %}
 
         <div class="answers">
-            <h2>Answers:</h2>
+            <h2>{{ answer_count }} answer{{ 's' if answer_count > 1 else '' }}</h2>
             {% for answer in question.get('answers') %}
                 {% include 'includes/answer.html' %}
-                {% if answer.get('comments') %}
-                    <div class="answer-comments">
-                        <h3>Comments:</h3>
+                <div class="comments">
+                    {% if answer.get('comments') %}
                         {% for comment in answer.get('comments') %}
                             {% include 'includes/comment.html' %}
                         {% endfor %}
-                    </div>
-                {% endif %}
-                <small><a href="/answer/{{ answer.get('id') }}/add-comment">Add comment</a></small>
+                        <span><a href="add-comment">Add comment</a></span>
+                    {% else %}
+                        <span><a href="add-comment">Be the first to comment</a></span>
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
-        <h2>Add your answer:</h2>
-
-    {% else %}
-
-        <h2>Be the first to answer this question:</h2>
 
     {% endif %}
+
+    <div class="add-answer">
+        {% if answer_count %}
+            <h2>Add your answer:</h2>
+        {% else %}
+            <h2>Be the first to answer this question:</h2>
+        {% endif %}
 
         <form action="submit-answer" method="post">
 
@@ -54,7 +58,6 @@
             <input id="image" type="text" name="image_url" min placeholder="e.g. http://www.images.com/cutekitten.jpg"><br>
 
             <input type="submit">
-
         </form>
-
+    </div>
 {% endblock %}

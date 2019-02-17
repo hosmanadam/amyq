@@ -1,10 +1,10 @@
 <div id="answer_{{ answer.get('id') }}" class="answer">
 
-    <p>{{ answer.get('body') }}</p>
-
     <div class="entry-meta">
         <small><a href="/user/{{ answer.get('username') }}"><strong>{{ answer.get('username') }}</strong></a> on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}</small>
     </div>
+
+    <p>{{ answer.get('body') }}</p>
 
     {% if answer.get('image_url') %}
         <img src="{{ answer.get('image_url') }}" alt="Illustration"><br>

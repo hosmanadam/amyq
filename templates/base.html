@@ -7,22 +7,23 @@
     </head>
     <body>
         <header>
+            <div class="logo">AMYQ</div>
+            <div class="tagline">You have the question, we have the answer</div>
         </header>
-        <main>
         <nav>
-            <h5><a href="/">Home</a></h5>
+            <a href="/">Home</a>
             {% if session.get('username') %}
-                <h5>Logged in as <a href="/user/{{ session.get('username') }}"><strong>{{ session.get('username') }}</strong></a></h5>
-                <h5><a href="/logout">Log out</a></h5>
+                <span>Logged in as <a href="/user/{{ session.get('username') }}"><strong>{{ session.get('username') }}</strong></a></span>
+                <a href="/logout">Log out</a>
             {% else %}
-            <h5><a href="/login">Login</a></h5>
-            <h5><a href="/register">Register</a></h5>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
             {% endif %}
-            <h5><a href="/users">Users</a></h5>
+            <a href="/users">Users</a>
+            <a href="/add-question">Ask a new question</a>
         </nav>
-        <h3><a href="/add-question">Ask a new question</a></h3>
-        <hr>
-        {% block body %}{% endblock %}
+        <main>
+            {% block main %}{% endblock %}
         </main>
         <footer>
         </footer>

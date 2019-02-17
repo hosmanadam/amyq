@@ -1,10 +1,10 @@
-<div id="comment_{{ comment.get('id') }}" class="question-comment">
-
-    <p>{{ comment.get('body') }}</p>
+<div id="comment_{{ comment.get('id') }}" class="comment">
 
     <div class="entry-meta">
         <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small>
     </div>
+
+    <p>{{ comment.get('body') }}</p>
 
     {% if session.username == comment.get('username') %}
 
