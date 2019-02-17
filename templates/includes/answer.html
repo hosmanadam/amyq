@@ -1,0 +1,34 @@
+<div id="answer_{{ answer.get('id') }}" class="answer">
+
+    <p>{{ answer.get('body') }}</p>
+
+    <div class="entry-meta">
+        <small><a href="/user/{{ answer.get('username') }}"><strong>{{ answer.get('username') }}</strong></a> on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}</small>
+    </div>
+
+    {% if answer.get('image_url') %}
+        <img src="{{ answer.get('image_url') }}" alt="Illustration"><br>
+    {% endif %}
+
+    <div class="button-row">
+
+        <form action="/answer/{{ answer.get('id') }}/vote-up" method="POST">
+            <input type="submit" value="Vote up"{{ ' disabled' if session.username == answer.get('username') else '' }}>
+        </form>
+
+        <form action="/answer/{{ answer.get('id') }}/vote-down" method="POST">
+            <input type="submit" value="Vote down"{{ ' disabled' if session.username == answer.get('username') else '' }}>
+        </form>
+
+        {% if session.username == answer.get('username') %}
+
+            <form action="/answer/{{ answer.get('id') }}/edit">
+                <input type="submit" value="Edit">
+            </form>
+
+            <form action="/answer/{{ answer.get('id') }}/delete">
+                <input type="submit" value="Delete">
+            </form>
+        {% endif %}
+    </div>
+</div>

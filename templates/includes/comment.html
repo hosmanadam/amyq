@@ -1,0 +1,22 @@
+<div id="comment_{{ comment.get('id') }}" class="question-comment">
+
+    <p>{{ comment.get('body') }}</p>
+
+    <div class="entry-meta">
+        <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small>
+    </div>
+
+    {% if session.username == comment.get('username') %}
+
+        <div class="button-row">
+
+            <form action="/comment/{{ comment.get('id') }}/edit">
+                <input type="submit" value="Edit">
+            </form>
+
+            <form action="/comment/{{ comment.get('id') }}/delete">
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,58 @@
+<div id="question_{{ question.get('id') }}" class="question">
+
+    <h1>{{ question.get('title') }}</h1>
+
+    {% if question.get('body') %}
+        <p>{{ question.get('body') }}</p>
+    {% endif %}
+
+    {% if question.get('image_url') %}
+        <img src="{{ question.get('image_url') }}" alt="Illustration"><br>
+    {% endif %}
+
+    <div class="tag-row">
+
+        {% for tag in question.get('tags') %}
+
+            <div class="tag">
+
+                #{{ tag.get('name') }}
+
+                {% if session.username == question.get('username') %}
+                    <a href="/question/{{ question.get('id') }}/tag/{{ tag.get('id') }}/delete">❌</a>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="entry-meta">
+        <small><a href="/user/{{ question.get('username') }}"><strong>{{ question.get('username') }}</strong></a> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small>
+    </div>
+
+    <div class="button-row">
+
+        <form action="vote-up" method="POST">
+            <input type="submit" value="Vote up"{{ ' disabled' if session.username == question.get('username') else '' }}>
+        </form>
+
+        <form action="vote-down" method="POST">
+            <input type="submit" value="Vote down"{{ ' disabled' if session.username == question.get('username') else '' }}>
+        </form>
+
+        {% if session.username == question.get('username') %}
+
+            <form action="edit">
+                <input type="submit" value="Edit">
+            </form>
+
+            <form action="delete">
+                <input type="submit" value="Delete">
+            </form>
+
+            <form action="add-tag">
+                <input type="submit" value="Add tag">
+            </form>
+        {% endif %}
+    </div>
+</div>

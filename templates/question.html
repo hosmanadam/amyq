@@ -1,196 +1,60 @@
 {% extends 'base.html' %}
-{% block title %}{{ super() }}
-{{ question.get('title')[:50] + ('...' if question.get('title')|length > 50 else '') }}
+
+{% block title %}
+    {{ super() }}
+    {{ question.get('title')[:50] + ('...' if question.get('title')|length > 50 else '') }}
 {% endblock %}
 
 {% block body %}
 
-<div id="question_{{ question.get('id') }}" class="question">
+    {% include 'includes/question.html' %}
 
-    <h1>{{ question.get('title') }}</h1>
-
-    {% if question.get('body') %}
-        <p>{{ question.get('body') }}</p>
+    {% if question.get('comments') %}
+        <div class="question-comments">
+            <h2>Comments:</h2>
+            {% for comment in question.get('comments') %}
+                {% include 'includes/comment.html' %}
+            {% endfor %}
+        </div>
     {% endif %}
 
-    {% if question.get('image_url') %}
-        <img src="{{ question.get('image_url') }}" alt="Illustration"><br>
-    {% endif %}
+    <small><a href="add-comment">Add comment</a></small>
 
-    <div class="tag-row">
+    {% if question.get('answers') %}
 
-        {% for tag in question.get('tags') %}
-
-            <div class="tag">
-
-                #{{ tag.get('name') }}
-
-                {% if session.username == question.get('username') %}
-                    <a href="/question/{{ question.get('id') }}/tag/{{ tag.get('id') }}/delete">❌</a>
-                {% endif %}
-
-            </div>
-        {% endfor %}
-    </div>
-
-    <div class="entry-meta">
-        <small><a href="/user/{{ question.get('username') }}"><strong>{{ question.get('username') }}</strong></a> on {{ question.get('created') }} – Views: {{ question.get('view_count') }} Votes: {{ question.get('vote_count') }}</small>
-    </div>
-
-    <div class="button-row">
-
-        <form action="vote-up" method="POST">
-            <input type="submit" value="Vote up"{{ ' disabled' if session.username == question.get('username') else '' }}>
-        </form>
-
-        <form action="vote-down" method="POST">
-            <input type="submit" value="Vote down"{{ ' disabled' if session.username == question.get('username') else '' }}>
-        </form>
-
-        {% if session.username == question.get('username') %}
-
-            <form action="edit">
-                <input type="submit" value="Edit">
-            </form>
-
-            <form action="delete">
-                <input type="submit" value="Delete">
-            </form>
-
-            <form action="add-tag">
-                <input type="submit" value="Add tag">
-            </form>
-        {% endif %}
-    </div>
-</div>
-
-{% if question.get('comments') %}
-    <div class="question-comments">
-        <h2>Comments:</h2>
-        {% for comment in question.get('comments') %}
-            <div id="comment_{{ comment.get('id') }}" class="question-comment">
-
-                <p>{{ comment.get('body') }}</p>
-
-                <div class="entry-meta">
-                    <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small>
-                </div>
-
-                {% if session.username == comment.get('username') %}
-
-                    <div class="button-row">
-
-                        <form action="/comment/{{ comment.get('id') }}/edit">
-                            <input type="submit" value="Edit">
-                        </form>
-
-                        <form action="/comment/{{ comment.get('id') }}/delete">
-                            <input type="submit" value="Delete">
-                        </form>
+        <div class="answers">
+            <h2>Answers:</h2>
+            {% for answer in question.get('answers') %}
+                {% include 'includes/answer.html' %}
+                {% if answer.get('comments') %}
+                    <div class="answer-comments">
+                        <h3>Comments:</h3>
+                        {% for comment in answer.get('comments') %}
+                            {% include 'includes/comment.html' %}
+                        {% endfor %}
                     </div>
                 {% endif %}
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
+                <small><a href="/answer/{{ answer.get('id') }}/add-comment">Add comment</a></small>
+            {% endfor %}
+        </div>
+        <h2>Add your answer:</h2>
 
-<small><a href="add-comment">Add comment</a></small>
+    {% else %}
 
-{% if question.get('answers') %}
-    <div class="answers">
+        <h2>Be the first to answer this question:</h2>
 
-        <h2>Answers:</h2>
+    {% endif %}
 
-        {% for answer in question.get('answers') %}
+        <form action="submit-answer" method="post">
 
-            <div id="answer_{{ answer.get('id') }}" class="answer">
+            <label for="details">Your answer:</label><br>
+            <textarea id="details" name="body" minlength="10" required></textarea><br>
 
-                <p>{{ answer.get('body') }}</p>
+            <label for="image">Image URL:</label><br>
+            <input id="image" type="text" name="image_url" min placeholder="e.g. http://www.images.com/cutekitten.jpg"><br>
 
-                <div class="entry-meta">
-                    <small><a href="/user/{{ answer.get('username') }}"><strong>{{ answer.get('username') }}</strong></a> on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}</small>
-                </div>
+            <input type="submit">
 
-                {% if answer.get('image_url') %}
-                    <img src="{{ answer.get('image_url') }}" alt="Illustration"><br>
-                {% endif %}
-
-                <div class="button-row">
-
-                    <form action="/answer/{{ answer.get('id') }}/vote-up" method="POST">
-                        <input type="submit" value="Vote up"{{ ' disabled' if session.username == answer.get('username') else '' }}>
-                    </form>
-
-                    <form action="/answer/{{ answer.get('id') }}/vote-down" method="POST">
-                        <input type="submit" value="Vote down"{{ ' disabled' if session.username == answer.get('username') else '' }}>
-                    </form>
-
-                    {% if session.username == answer.get('username') %}
-
-                        <form action="/answer/{{ answer.get('id') }}/edit">
-                            <input type="submit" value="Edit">
-                        </form>
-
-                        <form action="/answer/{{ answer.get('id') }}/delete">
-                            <input type="submit" value="Delete">
-                        </form>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% if answer.get('comments') %}
-
-                <div class="answer-comments">
-
-                    <h3>Comments:</h3>
-
-                    {% for comment in answer.get('comments') %}
-
-                        <div id="comment_{{ comment.get('id') }}" class="answer-comment">
-
-                            <p>{{ comment.get('body') }}</p>
-
-                            <div class="entry-meta">
-                                <small><a href="/user/{{ comment.get('username') }}"><strong>{{ comment.get('username') }}</strong></a> on {{ comment.get('created') }}</small>
-                            </div>
-
-                            {% if session.username == comment.get('username') %}
-
-                                <form action="/comment/{{ comment.get('id') }}/edit">
-                                    <input type="submit" value="Edit">
-                                </form>
-
-                                <form action="/comment/{{ comment.get('id') }}/delete">
-                                    <input type="submit" value="Delete">
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <small><a href="/answer/{{ answer.get('id') }}/add-comment">Add comment</a></small>
-        {% endfor %}
-    </div>
-
-    <h2>Add your answer:</h2>
-
-{% else %}
-
-    <h2>Be the first to answer this question:</h2>
-
-{% endif %}
-
-    <form action="submit-answer" method="post">
-
-        <label for="details">Your answer:</label><br>
-        <textarea id="details" name="body" minlength="10" required></textarea><br>
-
-        <label for="image">Image URL:</label><br>
-        <input id="image" type="text" name="image_url" min placeholder="e.g. http://www.images.com/cutekitten.jpg"><br>
-
-        <input type="submit">
-
-    </form>
+        </form>
 
 {% endblock %}
