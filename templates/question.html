@@ -7,6 +7,7 @@
 
 {% block main %}
 
+    {% set user_is_asker = (session.username == question.get('username')) %}
     {% include 'includes/question.html' %}
 
     <div class="comments">

@@ -22,7 +22,7 @@
 
                 #{{ tag.get('name') }}
 
-                {% if session.username == question.get('username') %}
+                {% if user_is_asker %}
                     <a href="/question/{{ question.get('id') }}/tag/{{ tag.get('id') }}/delete">❌</a>
                 {% endif %}
             </div>
@@ -32,14 +32,14 @@
     <div class="button-row">
 
         <form action="vote-up" method="POST">
-            <input type="submit" value="Vote up"{{ ' disabled' if session.username == question.get('username') else '' }}>
+            <input type="submit" value="Vote up"{{ ' disabled' if user_is_asker else '' }}>
         </form>
 
         <form action="vote-down" method="POST">
-            <input type="submit" value="Vote down"{{ ' disabled' if session.username == question.get('username') else '' }}>
+            <input type="submit" value="Vote down"{{ ' disabled' if user_is_asker else '' }}>
         </form>
 
-        {% if session.username == question.get('username') %}
+        {% if user_is_asker %}
 
             <form action="edit">
                 <input type="submit" value="Edit">
