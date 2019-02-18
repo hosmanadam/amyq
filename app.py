@@ -54,10 +54,12 @@ def register():
         return redirect('/login')
 
 
+# TODO: test
 @app.route('/user/<username>')
 @auth.needs_login(session)
 def user(username):
     user = db_handler.get_user_info(username)
+    user.update(db_handler.get_user_reputation(user.get('id')))
     user = prettify_user_info(user)
     questions, answers, comments = db_handler.get_all_entries_by_user(username)
     return render_template('user.html', user=user, questions=questions, answers=answers, comments=comments)
