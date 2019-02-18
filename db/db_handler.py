@@ -95,6 +95,14 @@ def get_user_info(connection, cursor, username):
     return user_info
 
 
+# TODO: test
+@connection_handler(dictionary=True)
+def get_user_reputation(connection, cursor, user_id):
+    cursor.execute(queries.read_user_reputation, params={'user_id': user_id})
+    query_result = cursor.fetchall()[0]
+    return sum(query_result.values())
+
+
 @connection_handler(dictionary=True)
 def get_question_id_for_answer_id(connection, cursor, answer_id):
     cursor.execute(queries.read_question_id_for_answer_id, params={'id': answer_id})
