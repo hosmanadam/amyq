@@ -100,6 +100,9 @@ CREATE TABLE vote (
 ALTER TABLE question
 ADD FOREIGN KEY (user_id) REFERENCES user(id);
 
+ALTER TABLE question
+ADD FOREIGN KEY (accepted_answer_id) REFERENCES answer(id);
+
 
 ALTER TABLE answer
 ADD FOREIGN KEY (user_id) REFERENCES user(id);
