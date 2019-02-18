@@ -100,7 +100,7 @@ def get_user_info(connection, cursor, username):
 def get_user_reputation(connection, cursor, user_id):
     cursor.execute(queries.read_user_reputation, params={'user_id': user_id})
     query_result = cursor.fetchall()[0]
-    return sum(query_result.values())
+    return query_result
 
 
 @connection_handler(dictionary=True)
