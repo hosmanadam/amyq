@@ -302,7 +302,16 @@ read_user_info_for_username = """
 
 # TODO: test
 read_user_reputation = """
-SELECT * FROM
+SELECT
+
+    IFNULL(reputation_from_question_votes, 0) AS reputation_from_question_votes,
+    IFNULL(reputation_from_answer_votes, 0) AS reputation_from_answer_votes,
+    IFNULL(reputation_from_answer_accepts, 0) AS reputation_from_answer_accepts,
+    IFNULL((reputation_from_question_votes +
+            reputation_from_answer_votes +
+            reputation_from_answer_accepts), 0) AS reputation_total
+
+FROM
 
   (SELECT SUM(IF(value=1, 5, 0) + IF(value=-1, -2, 0)) AS reputation_from_question_votes
   FROM question
