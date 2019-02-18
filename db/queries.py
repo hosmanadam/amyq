@@ -313,24 +313,30 @@ SELECT
 
 FROM
 
-  (SELECT SUM(IF(value=1, 5, 0) + IF(value=-1, -2, 0)) AS reputation_from_question_votes
-  FROM question
-  LEFT JOIN vote ON question.id = vote.question_id
-  WHERE question.user_id = %(user_id)s) AS question_vote_aggregate
+    (SELECT
+        SUM(IF(value=1, 5, 0) + IF(value=-1, -2, 0)) AS reputation_from_question_votes
+
+    FROM question
+    LEFT JOIN vote ON question.id = vote.question_id
+    WHERE question.user_id = %(user_id)s) AS question_vote_aggregate
 
 JOIN
 
-  (SELECT SUM(IF(value=1, 10, 0) + IF(value=-1, -2, 0)) AS reputation_from_answer_votes
-  FROM answer
-  LEFT JOIN vote ON answer.id = vote.answer_id
-  WHERE answer.user_id = %(user_id)s) AS answer_vote_aggregate
+    (SELECT
+        SUM(IF(value=1, 10, 0) + IF(value=-1, -2, 0)) AS reputation_from_answer_votes
+
+    FROM answer
+    LEFT JOIN vote ON answer.id = vote.answer_id
+    WHERE answer.user_id = %(user_id)s) AS answer_vote_aggregate
 
 JOIN
 
-  (SELECT SUM(15) AS reputation_from_answer_accepts
-  FROM question
-  JOIN answer on question.accepted_answer_id = answer.id
-  WHERE answer.user_id = %(user_id)s) AS answer_accept_aggregate
+    (SELECT
+        SUM(15) AS reputation_from_answer_accepts
+
+    FROM question
+    JOIN answer on question.accepted_answer_id = answer.id
+    WHERE answer.user_id = %(user_id)s) AS answer_accept_aggregate
 """
 
 add_question = """
