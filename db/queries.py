@@ -300,7 +300,6 @@ read_user_info_for_username = """
     WHERE username = %(username)s
 """
 
-# TODO: test
 read_user_reputation = """
 SELECT
 

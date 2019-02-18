@@ -54,7 +54,6 @@ def register():
         return redirect('/login')
 
 
-# TODO: test
 @app.route('/user/<username>')
 @auth.needs_login(session)
 def user(username):

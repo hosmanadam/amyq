@@ -95,7 +95,6 @@ def get_user_info(connection, cursor, username):
     return user_info
 
 
-# TODO: test
 @connection_handler(dictionary=True)
 def get_user_reputation(connection, cursor, user_id):
     cursor.execute(queries.read_user_reputation, params={'user_id': user_id})
