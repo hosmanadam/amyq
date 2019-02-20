@@ -9,6 +9,7 @@
 
     {% set user_is_asker = (session.username == question.get('username')) %}
     {% set accepted_answer_id = question.get('accepted_answer_id') %}
+    {% set question_id = question.get('id') %}
     {% include 'includes/question.html' %}
 
     <div class="comments">
@@ -28,15 +29,16 @@
         <div class="answers">
             <h2>{{ answer_count }} answer{{ 's' if answer_count > 1 else '' }}</h2>
             {% for answer in question.get('answers') %}
+                {% set answer_id = answer.get('id') %}
                 {% include 'includes/answer.html' %}
                 <div class="comments">
                     {% if answer.get('comments') %}
                         {% for comment in answer.get('comments') %}
                             {% include 'includes/comment.html' %}
                         {% endfor %}
-                        <span><a href="add-comment">Add comment</a></span>
+                        <span><a href="/answer/{{ answer_id }}/add-comment">Add comment</a></span>
                     {% else %}
-                        <span><a href="add-comment">Be the first to comment</a></span>
+                        <span><a href="/answer/{{ answer_id }}/add-comment">Be the first to comment</a></span>
                     {% endif %}
                 </div>
             {% endfor %}

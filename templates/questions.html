@@ -39,7 +39,7 @@ Home
     </tr>
 {% for question in questions %}
     <tr>
-        <td><a href="/question/{{ question['id'] }}">
+        <td><a href="/question/{{ question.get('id') }}">
             {% if search %}
                 {{ question['title']|replace(search, '<span class="highlight">'|safe + search + '</span>'|safe) }}
             {% else %}

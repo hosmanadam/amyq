@@ -4,12 +4,12 @@ Except: title, summary field
 -->
 {% extends 'base.html' %}
 {% block title %}{{ super() }}
-Edit answer #{{ answer['id'] }}
+Edit answer #{{ answer.get('id') }}
 {% endblock %}
 
 {% block main %}
 
-<h2>Edit answer #{{ answer['id'] }} here:</h2>
+<h2>Edit answer #{{ answer.get('id') }} here:</h2>
 <form method="post">
 
     <label for="details">Details:</label><br>

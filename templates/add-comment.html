@@ -2,9 +2,9 @@
 
 {% block title %}{{ super() }}
     {% if question %}
-        Comment on question #{{ question['id'] }}
+        Comment on question #{{ question.get('id') }}
     {% elif answer %}
-        Comment on answer #{{ answer['id'] }}
+        Comment on answer #{{ answer.get('id') }}
     {% endif %}
 {% endblock %}
 
