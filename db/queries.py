@@ -266,6 +266,17 @@ read_comment = """
     WHERE id = %(id)s
 """
 
+# TODO: test
+read_tags_with_question_count = """
+    SELECT
+        tag.name, COUNT(*) AS question_count
+    FROM
+        tag
+        JOIN tag_to_question on tag.id = tag_to_question.tag_id
+        JOIN question on tag_to_question.question_id = question.id
+    GROUP BY tag.name
+"""
+
 read_existing_tags = """
     SELECT tag.id, tag.name, tag.user_id
     FROM tag
