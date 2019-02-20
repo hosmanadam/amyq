@@ -138,7 +138,7 @@ def add_new_tag_to_question(connection, cursor, user_id, question_id, tag_name):
     cursor.execute(queries.add_new_tag, params={'user_id': user_id, 'name': tag_name})
     cursor.execute(queries.read_tag_id_for_tag_name, params={'name': tag_name})
     tag_id = cursor.fetchall()[0]['id']
-    add_existing_tag_to_question(connection, cursor, question_id, tag_id)
+    add_existing_tag_to_question(connection, cursor, user_id, question_id, tag_id)
 
 
 @connection_handler(dictionary=True)
