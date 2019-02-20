@@ -72,6 +72,14 @@ def get_comment(connection, cursor, comment_id):
     return comment
 
 
+# TODO: test
+@connection_handler(dictionary=True)
+def get_tags_with_question_count(connection, cursor):
+    cursor.execute(queries.read_tags_with_question_count)
+    tags = cursor.fetchall()
+    return tags
+
+
 @connection_handler(dictionary=True)
 def get_existing_tags(connection, cursor):
     cursor.execute(queries.read_existing_tags)
