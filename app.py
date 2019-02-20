@@ -106,6 +106,13 @@ def question(question_id):
     return render_template('question.html', question=question, session=session)
 
 
+# TODO: test
+@app.route('/tags/')
+def tags():
+    tags = db_handler.get_tags_with_question_count()
+    return render_template('tags.html', tags=tags)
+
+
 @app.route('/add-question', methods=['GET', 'POST'])
 @auth.needs_login(session)
 def add_question():
