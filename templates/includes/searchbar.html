@@ -1,6 +1,16 @@
 <form id="filters" action="/questions/1">
-    <label for="search">Search: </label>
-    <input type="text" id="search" name="search" placeholder="e.g. &quot;kittens&quot;"{{ ' value=' + search if search else '' }}><br>
+
+    <label for="text_search">Search for text: </label>
+    <input type="text" id="text_search" name="text_search" placeholder="e.g. &quot;kittens&quot;"{{ ' value=' + text_search if text_search else '' }}><br>
+
+    <label for="tag_search">Search for tag:</label>
+    <select id="tag_search" name="tag_choice_id">
+        <option value=""{{ ' selected' if tag_search=='' else '' }}></option>
+        {% for tag in existing_tags %}
+            <option value="{{ tag['id'] }}"{{ ' selected' if tag['id']|string==tag_search else '' }}>#{{ tag['name'] }}</option>
+        {% endfor %}
+    </select><br>
+
     <label for="ordering">Order by: </label>
     <select id="ordering" name="ordering" >
         <option value="title-DESC"{{ ' selected' if ordering=='title-DESC' else '' }}>Title, descending</option>
@@ -12,6 +22,7 @@
         <option value="created-DESC"{{ ' selected' if ordering=='created-DESC' else '' }}>Time submitted, descending</option>
         <option value="created-ASC"{{ ' selected' if ordering=='created-ASC' else '' }}>Time submitted, ascending</option>
     </select><br>
+
     <label for="questions_per_page">Questions per page: </label>
     <select id="questions_per_page" name="questions_per_page">
         <option value="5"{{ ' selected' if questions_per_page == 5 else '' }}>5</option>
@@ -20,5 +31,7 @@
         <option value="50"{{ ' selected' if questions_per_page == 50 else '' }}>50</option>
         <option value="100"{{ ' selected' if questions_per_page == 100 else '' }}>100</option>
     </select><br>
+
     <button type="submit">Do it</button>
+
 </form>

@@ -8,8 +8,8 @@
 {% for question in questions %}
     <tr>
         <td><a href="/question/{{ question.get('id') }}">
-            {% if search %}
-                {{ question['title']|replace(search, '<span class="highlight">'|safe + search + '</span>'|safe) }}
+            {% if text_search %}
+                {{ question['title']|replace(text_search, '<span class="highlight">'|safe + text_search + '</span>'|safe) }}
             {% else %}
                 {{ question['title'] }}
             {% endif %}

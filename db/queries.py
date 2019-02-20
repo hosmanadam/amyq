@@ -88,51 +88,59 @@ read_comments_by_user = """
 """
 
 read_questions_for_search = """
-    SELECT
-        question.id,
-        question.title,
-        question.created,
-        question.last_updated,
-        question.body,
-        user.id AS user_id,
-        user.username,
-        user.first_name,
-        user.last_name,
-        user.locality,
-        user.country,
-        ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
-        ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count
+SELECT
+    question.id,
+    question.title,
+    question.created,
+    question.last_updated,
+    question.body,
+    user.id AS user_id,
+    user.username,
+    user.first_name,
+    user.last_name,
+    user.locality,
+    user.country,
+    ANY_VALUE(IFNULL(views.count, 0)) AS view_count,
+    ANY_VALUE(IFNULL(votes.count, 0)) AS vote_count,
+    CONCAT(',', GROUP_CONCAT(tag.id), ',') AS tag_ids
+FROM
+    question
 
-    FROM
-        question
+    JOIN user ON question.user_id = user.id
 
-        JOIN user ON question.user_id = user.id
+    LEFT JOIN answer ON question.id = answer.question_id
 
-        LEFT JOIN answer ON question.id = answer.question_id
+    LEFT JOIN (
+        SELECT
+            question_id,
+            SUM(count) AS count
+        FROM view
+        GROUP BY question_id
+    ) AS views ON question.id = views.question_id
 
-        LEFT JOIN (
-            SELECT
-                question_id,
-                SUM(count) AS count
-            FROM view
-            GROUP BY question_id
-        ) AS views ON question.id = views.question_id
+    LEFT JOIN (
+        SELECT
+            question_id,
+            SUM(value) AS count
+        FROM vote
+        GROUP BY question_id
+    ) AS votes ON question.id = votes.question_id
 
-        LEFT JOIN (
-            SELECT
-                question_id,
-                SUM(value) AS count
-            FROM vote
-            GROUP BY question_id
-        ) AS votes ON question.id = votes.question_id
+    LEFT JOIN tag_to_question ON question.id = tag_to_question.question_id
 
-    WHERE
-        question.title LIKE CONCAT('%', %(search)s, '%') OR
-        question.body LIKE CONCAT('%', %(search)s, '%') OR
-        answer.body LIKE CONCAT('%', %(search)s, '%')
+    LEFT JOIN tag ON tag_to_question.tag_id = tag.id
 
-    GROUP BY
-        question.id
+WHERE
+    question.title LIKE CONCAT('%', %(text_search)s, '%') OR
+    question.body LIKE CONCAT('%', %(text_search)s, '%') OR
+    answer.body LIKE CONCAT('%', %(text_search)s, '%')
+
+GROUP BY
+    question.id
+
+HAVING
+    tag_ids LIKE CONCAT('%,', %(tag_search)s, ',%') OR
+    %(tag_search)s = ''
 """
 
 read_question = """
@@ -266,10 +274,9 @@ read_comment = """
     WHERE id = %(id)s
 """
 
-# TODO: test
 read_tags_with_question_count = """
     SELECT
-        tag.name, COUNT(*) AS question_count
+        tag.name, tag.id, COUNT(*) AS question_count
     FROM
         tag
         JOIN tag_to_question on tag.id = tag_to_question.tag_id

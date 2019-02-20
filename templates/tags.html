@@ -5,17 +5,10 @@ Tags
 
 {% block main %}
 
-<table>
-    <tr>
-        <th>Tag</th>
-        <th>On...</th>
-    </tr>
+<ul>
     {% for tag in tags %}
-        <tr>
-            <td>#{{ tag.get('name') }}</td>
-            <td><a href="/tag/{{ tag.get('name') }}">{{ tag.get('question_count') }} questions</a></td>
-        </tr>
+            <li><a href="/questions/1?tag_choice_id={{ tag.get('id') }}">#{{ tag.get('name') }}</a> ({{ tag.get('question_count') }} questions tagged)</li>
     {% endfor %}
-</table>
+</ul>
 
 {% endblock %}

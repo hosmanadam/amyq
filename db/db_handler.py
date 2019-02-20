@@ -20,10 +20,10 @@ def get_all_entries_by_user(connection, cursor, username):
 
 
 @connection_handler(dictionary=True)
-def get_questions(connection, cursor, order_by, order_direction, search=''):
+def get_questions(connection, cursor, order_by, order_direction, text_search='', tag_search=''):
     cursor.execute(
         queries.read_questions_for_search,
-        params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
+        params={'order_by': order_by, 'order_direction': order_direction, 'text_search': text_search, 'tag_search': tag_search}
     )
     questions = cursor.fetchall()
     questions_ordered = sorted(
@@ -72,7 +72,6 @@ def get_comment(connection, cursor, comment_id):
     return comment
 
 
-# TODO: test
 @connection_handler(dictionary=True)
 def get_tags_with_question_count(connection, cursor):
     cursor.execute(queries.read_tags_with_question_count)
