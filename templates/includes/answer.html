@@ -1,10 +1,10 @@
-<div id="answer_{{ answer.get('id') }}" class="answer">
+<div id="answer_{{ answer_id }}" class="answer">
 
     <div class="entry-meta">
         <small>
             <a href="/user/{{ answer.get('username') }}"><strong>{{ answer.get('username') }}</strong></a>
             on {{ answer.get('created') }} – Votes: {{ answer.get('vote_count') }}
-            {% if accepted_answer_id == answer.get('id') %}
+            {% if accepted_answer_id == answer_id %}
                 <span class="accepted-mark" title="Marked as accepted by {{ question.get('username') }}">✅</span>
             {% endif %}
         </small>
@@ -18,36 +18,36 @@
 
     <div class="button-row">
 
-        <form action="/answer/{{ answer.get('id') }}/vote-up" method="POST">
+        <form action="/answer/{{ answer_id }}/vote-up" method="POST">
             <input type="submit" value="Vote up"{{ ' disabled' if session.username == answer.get('username') else '' }}>
         </form>
 
-        <form action="/answer/{{ answer.get('id') }}/vote-down" method="POST">
+        <form action="/answer/{{ answer_id }}/vote-down" method="POST">
             <input type="submit" value="Vote down"{{ ' disabled' if session.username == answer.get('username') else '' }}>
         </form>
 
         {% if session.username == answer.get('username') %}
 
-            <form action="/answer/{{ answer.get('id') }}/edit">
+            <form action="/answer/{{ answer_id }}/edit">
                 <input type="submit" value="Edit">
             </form>
 
-            <form action="/answer/{{ answer.get('id') }}/delete">
+            <form action="/answer/{{ answer_id }}/delete">
                 <input type="submit" value="Delete">
             </form>
         {% endif %}
 
         {% if user_is_asker %}
 
-            {% if accepted_answer_id == answer.get('id') %}
+            {% if accepted_answer_id == answer_id %}
 
-                <form action="/question/{{ question.get('id') }}/unaccept-answer/{{ answer.get('id') }}/" method="POST">
+                <form action="/question/{{ question_id }}/unaccept-answer/{{ answer_id }}/" method="POST">
                     <input type="submit" value="Unmark as accepted">
                 </form>
 
             {% else %}
 
-                <form action="/question/{{ question.get('id') }}/accept-answer/{{ answer.get('id') }}/" method="POST">
+                <form action="/question/{{ question_id }}/accept-answer/{{ answer_id }}/" method="POST">
                     <input type="submit" value="Mark as accepted">
                 </form>
 

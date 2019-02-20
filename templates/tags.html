@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ super() }}
+Tags
+{% endblock %}
+
+{% block main %}
+
+<ul>
+    {% for tag in tags %}
+            <li><a href="/questions/1?tag_choice_id={{ tag.get('id') }}">#{{ tag.get('name') }}</a> ({{ tag.get('question_count') }} questions tagged)</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

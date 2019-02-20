@@ -5,73 +5,8 @@ Home
 
 {% block main %}
 
-<form id="filters" action="/questions/1">
-    <label for="search">Search: </label>
-    <input type="text" id="search" name="search" placeholder="e.g. &quot;kittens&quot;"{{ ' value=' + search if search else '' }}><br>
-    <label for="ordering">Order by: </label>
-    <select id="ordering" name="ordering" >
-        <option value="title-DESC"{{ ' selected' if ordering=='title-DESC' else '' }}>Title, descending</option>
-        <option value="title-ASC"{{ ' selected' if ordering=='title-ASC' else '' }}>Title, ascending</option>
-        <option value="view_count-DESC"{{ ' selected' if ordering=='view_count-DESC' else '' }}>Views, descending</option>
-        <option value="view_count-ASC"{{ ' selected' if ordering=='view_count-ASC' else '' }}>Views, ascending</option>
-        <option value="vote_count-DESC"{{ ' selected' if ordering=='vote_count-DESC' else '' }}>Votes, descending</option>
-        <option value="vote_count-ASC"{{ ' selected' if ordering=='vote_count-ASC' else '' }}>Votes, ascending</option>
-        <option value="created-DESC"{{ ' selected' if ordering=='created-DESC' else '' }}>Time submitted, descending</option>
-        <option value="created-ASC"{{ ' selected' if ordering=='created-ASC' else '' }}>Time submitted, ascending</option>
-    </select><br>
-    <label for="questions_per_page">Questions per page: </label>
-    <select id="questions_per_page" name="questions_per_page">
-        <option value="5"{{ ' selected' if questions_per_page == 5 else '' }}>5</option>
-        <option value="10"{{ ' selected' if questions_per_page == 10 else '' }}>10</option>
-        <option value="20"{{ ' selected' if questions_per_page == 20 else '' }}>20</option>
-        <option value="50"{{ ' selected' if questions_per_page == 50 else '' }}>50</option>
-        <option value="100"{{ ' selected' if questions_per_page == 100 else '' }}>100</option>
-    </select><br>
-    <button type="submit">Do it</button>
-</form>
+{% include 'includes/searchbar.html' %}
 
-<table>
-    <tr>
-        <th>Title</th>
-        <th>Views</th>
-        <th>Votes</th>
-        <th>Submitted</th>
-    </tr>
-{% for question in questions %}
-    <tr>
-        <td><a href="/question/{{ question['id'] }}">
-            {% if search %}
-                {{ question['title']|replace(search, '<span class="highlight">'|safe + search + '</span>'|safe) }}
-            {% else %}
-                {{ question['title'] }}
-            {% endif %}
-        </a></td>
-        <td>{{ question['view_count'] }}</td>
-        <td>{{ question['vote_count'] }}</td>
-        <td>{{ question['created'] }}</td>
-    </tr>
-{% endfor %}
-</table>
-{% if page_numbers %}
-    <span id="page-numbers">
-        {% if page_number > page_numbers[0] %}
-            <a href="/questions/{{ page_numbers[0] }}?{{ query_string }}">&lt;&lt;</a>
-            <a href="/questions/{{ page_number - 1 }}?{{ query_string }}">&lt;</a>
-        {% else %}
-            &lt;&lt; &lt;
-        {% endif %}
+{% include 'includes/questions.html' %}
 
-        {% for num in page_numbers %}
-            <a href="/questions/{{ num }}?{{ query_string }}">{{ num if num != page_number else '<strong>'|safe + num|string + '</strong>'|safe }}</a>
-        {% endfor %}
-
-        {% if page_number < page_numbers[-1] %}
-            <a href="/questions/{{ page_number + 1 }}?{{ query_string }}">&gt;</a>
-            <a href="/questions/{{ page_numbers[-1] }}?{{ query_string }}">&gt;&gt;</a>
-        {% else %}
-            &gt; &gt;&gt;
-        {% endif %}
-
-    </span>
-{% endif %}
 {% endblock %}

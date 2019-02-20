@@ -20,10 +20,10 @@ def get_all_entries_by_user(connection, cursor, username):
 
 
 @connection_handler(dictionary=True)
-def get_questions(connection, cursor, order_by, order_direction, search=''):
+def get_questions(connection, cursor, order_by, order_direction, text_search='', tag_search=''):
     cursor.execute(
         queries.read_questions_for_search,
-        params={'order_by': order_by, 'order_direction': order_direction, 'search': search}
+        params={'order_by': order_by, 'order_direction': order_direction, 'text_search': text_search, 'tag_search': tag_search}
     )
     questions = cursor.fetchall()
     questions_ordered = sorted(
@@ -70,6 +70,13 @@ def get_comment(connection, cursor, comment_id):
     cursor.execute(queries.read_comment, params={'id': comment_id})
     comment = cursor.fetchall()[0]
     return comment
+
+
+@connection_handler(dictionary=True)
+def get_tags_with_question_count(connection, cursor):
+    cursor.execute(queries.read_tags_with_question_count)
+    tags = cursor.fetchall()
+    return tags
 
 
 @connection_handler(dictionary=True)
@@ -138,7 +145,7 @@ def add_new_tag_to_question(connection, cursor, user_id, question_id, tag_name):
     cursor.execute(queries.add_new_tag, params={'user_id': user_id, 'name': tag_name})
     cursor.execute(queries.read_tag_id_for_tag_name, params={'name': tag_name})
     tag_id = cursor.fetchall()[0]['id']
-    add_existing_tag_to_question(connection, cursor, question_id, tag_id)
+    add_existing_tag_to_question(connection, cursor, user_id, question_id, tag_id)
 
 
 @connection_handler(dictionary=True)

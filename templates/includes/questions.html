@@ -1,0 +1,44 @@
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Views</th>
+        <th>Votes</th>
+        <th>Submitted</th>
+    </tr>
+{% for question in questions %}
+    <tr>
+        <td><a href="/question/{{ question.get('id') }}">
+            {% if text_search %}
+                {{ question['title']|replace(text_search, '<span class="highlight">'|safe + text_search + '</span>'|safe) }}
+            {% else %}
+                {{ question['title'] }}
+            {% endif %}
+        </a></td>
+        <td>{{ question['view_count'] }}</td>
+        <td>{{ question['vote_count'] }}</td>
+        <td>{{ question['created'] }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% if page_numbers %}
+    <span id="page-numbers">
+        {% if page_number > page_numbers[0] %}
+            <a href="/questions/{{ page_numbers[0] }}?{{ query_string }}">&lt;&lt;</a>
+            <a href="/questions/{{ page_number - 1 }}?{{ query_string }}">&lt;</a>
+        {% else %}
+            &lt;&lt; &lt;
+        {% endif %}
+
+        {% for num in page_numbers %}
+            <a href="/questions/{{ num }}?{{ query_string }}">{{ num if num != page_number else '<strong>'|safe + num|string + '</strong>'|safe }}</a>
+        {% endfor %}
+
+        {% if page_number < page_numbers[-1] %}
+            <a href="/questions/{{ page_number + 1 }}?{{ query_string }}">&gt;</a>
+            <a href="/questions/{{ page_numbers[-1] }}?{{ query_string }}">&gt;&gt;</a>
+        {% else %}
+            &gt; &gt;&gt;
+        {% endif %}
+
+    </span>
+{% endif %}

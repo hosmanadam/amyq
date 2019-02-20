@@ -79,23 +79,27 @@ def questions(page_number):
         order_by, order_direction = request.args.get('ordering').split('-')
     else:
         order_by, order_direction = 'created', 'DESC'
-    search = request.args.get('search') or ''
+    text_search = request.args.get('text_search') or ''
+    tag_search = request.args.get('tag_choice_id') or ''
     if request.args.get('questions_per_page'):
         questions_per_page = int(request.args.get('questions_per_page'))
     else:
         questions_per_page = 5
-    questions = db_handler.get_questions(order_by=order_by, order_direction=order_direction, search=search)
+    questions = db_handler.get_questions(order_by=order_by, order_direction=order_direction, text_search=text_search, tag_search=tag_search)
     page_numbers = range(1, math.ceil(len(questions)/questions_per_page) + 1)
     questions = paginate(questions, page_number, questions_per_page)
+    existing_tags = db_handler.get_existing_tags()
     return render_template(
         'questions.html',
         questions=questions,
         ordering=request.args.get('ordering') or 'created-DESC',
-        search=search,
+        text_search=text_search,
+        tag_search=tag_search,
         page_number=int(page_number),
         page_numbers=page_numbers,
         questions_per_page=questions_per_page,
         query_string=request.query_string.decode("utf-8"),
+        existing_tags=existing_tags,
     )
 
 
@@ -104,6 +108,12 @@ def questions(page_number):
 def question(question_id):
     question = db_handler.get_question(session.get('id'), question_id)
     return render_template('question.html', question=question, session=session)
+
+
+@app.route('/tags/')
+def tags():
+    tags = db_handler.get_tags_with_question_count()
+    return render_template('tags.html', tags=tags)
 
 
 @app.route('/add-question', methods=['GET', 'POST'])

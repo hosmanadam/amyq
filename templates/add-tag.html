@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}{{ super() }}
-Tag question #{{ question['id'] }}
+Tag question #{{ question.get('id') }}
 {% endblock %}
 
 {% block main %}
 
-<h2>Tag question #{{ question['id'] }} here:</h2>
+<h2>Tag question #{{ question.get('id') }} here:</h2>
 
 <form method="POST">
     <label for="chosen_tag">Choose one of the existing tags:</label><br>

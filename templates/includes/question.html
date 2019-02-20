@@ -1,4 +1,4 @@
-<div id="question_{{ question.get('id') }}" class="question">
+<div id="question_{{ question_id }}" class="question">
 
     <h1>{{ question.get('title') }}</h1>
 
@@ -23,7 +23,7 @@
                 #{{ tag.get('name') }}
 
                 {% if user_is_asker %}
-                    <a href="/question/{{ question.get('id') }}/tag/{{ tag.get('id') }}/delete">❌</a>
+                    <a href="/question/{{ question_id }}/tag/{{ tag.get('id') }}/delete">❌</a>
                 {% endif %}
             </div>
         {% endfor %}
